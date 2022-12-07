@@ -33,12 +33,12 @@ repositories {
 dependencies {
 	//기본세팅
 	implementation("org.springframework.boot:spring-boot-starter") // Spring boot 를 이용하기 위한 위존성
+	implementation("org.springframework.boot:spring-boot-starter-web") // Spring boot web과 관련 controller 작성을 위함
 	implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 런타임 라이브러리 용량을 줄이기 위한 위존성
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8") // Kotlin 필수 기능, let, apply, use, synchronized 등
 
+	runtimeOnly("org.mariadb.jdbc:mariadb-java-client") //Kotlin과 Mariadb을 연결
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA - Hibernate 의존성 설정
-	implementation("org.springframework.boot:spring-boot-starter-web") // Spring boot web과 관련 controller 작성을 위함
-	implementation("mysql:mysql-connector-java") //Kotlin과 Mysql을 연결
 	implementation("org.jetbrains.kotlin:kotlin-allopen") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
 	implementation("org.jetbrains.kotlin:kotlin-noarg") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin") //Json 라이브러리
