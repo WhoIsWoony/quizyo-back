@@ -5,6 +5,21 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.15.RELEASE"
 	kotlin("jvm") version "1.6.21"
 	kotlin("plugin.spring") version "1.6.21"
+
+	kotlin("plugin.jpa") version "1.6.21" //JPA
+	kotlin("plugin.allopen") version "1.6.21" // allOpen에서 지정한 어노테이션으로 만든 클래스에 open 키워드 적용
+	// - Hibernate가 사용하는 Reflection API에서 Entity를 만들기 위해 인자 없는 기본 생성자가 필요함
+	kotlin("plugin.noarg") version "1.6.21" // 인자 없는 기본 생성자를 자동 생성
+}
+
+allOpen {
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.Embeddable")
+	annotation("jakarta.persistence.MappedSuperclass")
+}
+
+noArg {
+	annotation("jakarta.persistence.Entity")
 }
 
 group = "com.whoiswoony"
@@ -16,10 +31,18 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	//기본세팅
+	implementation("org.springframework.boot:spring-boot-starter") // Spring boot 를 이용하기 위한 위존성
+	implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 런타임 라이브러리 용량을 줄이기 위한 위존성
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8") // Kotlin 필수 기능, let, apply, use, synchronized 등
+	testImplementation("org.springframework.boot:spring-boot-starter-test") //TDD를 위함
+
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa") // JPA - Hibernate 의존성 설정
+	implementation("org.springframework.boot:spring-boot-starter-web") // Spring boot web과 관련 controller 작성을 위함
+	implementation("mysql:mysql-connector-java") //Kotlin과 Mysql을 연결
+	implementation("org.jetbrains.kotlin:kotlin-allopen") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
+	implementation("org.jetbrains.kotlin:kotlin-noarg") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin") //Json 라이브러리
 }
 
 tasks.withType<KotlinCompile> {
