@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/")
 class Auth(private val todoService: TodoService) {
 
-    @Operation(summary = "인사하는 Hello Todo")
+    @Operation(summary = "로그인")
     @GetMapping("/signIn")
     fun signIn(
         @RequestParam email:String,
@@ -22,7 +22,7 @@ class Auth(private val todoService: TodoService) {
         return true
     }
 
-
+    @Operation(summary = "회원가입")
     @GetMapping("/signUp")
     fun signUp(
         @RequestParam email:String,
@@ -33,6 +33,7 @@ class Auth(private val todoService: TodoService) {
         return true
     }
 
+    @Operation(summary = "이메일인증")
     @GetMapping("/verifyEmail")
     fun verifyEmail(
         @RequestParam encodedEmail:String,
@@ -41,7 +42,7 @@ class Auth(private val todoService: TodoService) {
         return true
     }
 
-
+    @Operation(summary = "비밀번호변경요청")
     @GetMapping("/requestChangePassword")
     fun requestChangePassword(
         @RequestParam email:String
@@ -49,7 +50,7 @@ class Auth(private val todoService: TodoService) {
         return true
     }
 
-
+    @Operation(summary = "비밀번호변경")
     @GetMapping("/changePassword")
     fun changePassword(
         @RequestParam encodedEmail:String,
