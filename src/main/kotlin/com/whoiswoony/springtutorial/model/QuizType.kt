@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name="SET")
-class Quiz (
+class QuizType (
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     val id: String,
     val question:String,

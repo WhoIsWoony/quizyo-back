@@ -7,10 +7,10 @@ import javax.persistence.*
 data class ParticipatePk(
     @ManyToOne
     @JoinColumn(name="user_id")
-    val user: User,
+    val user: UserType,
     @ManyToOne
     @JoinColumn(name="space_id")
-    val space: Space
+    val space: SpaceType
 ): Serializable
 
 @Entity

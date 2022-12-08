@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name="USER")
-class User (
+class UserType (
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     val id: String,
     val email: String,

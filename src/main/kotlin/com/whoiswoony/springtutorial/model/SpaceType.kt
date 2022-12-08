@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name="SPACE")
-class Space(
+class SpaceType(
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     val id: String,
     val title:String,
@@ -13,5 +13,5 @@ class Space(
 
     @OneToMany
     @JoinColumn(name="set_id")
-    var sets: MutableList<Set> = ArrayList(),
+    var sets: MutableList<SetType> = ArrayList(),
 )
