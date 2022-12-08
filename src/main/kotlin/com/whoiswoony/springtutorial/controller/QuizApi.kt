@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.math.BigInteger
 
-@Tag(name = "QuizS : Set API")
+@Tag(name = "QuizS : Quiz API")
 @RestController
 @RequestMapping("/")
-class Set(private val todoService: TodoService) {
+class QuizApi(private val todoService: TodoService) {
 
     @Operation(summary = "그룹내퀴즈들불러오기")
-    @GetMapping("/findSetBySpaceId")
-    fun findSetBySpaceId(
+    @GetMapping("/findQuizBySetId")
+    fun findQuizBySetId(
         @RequestParam accessToken:String,
-        @RequestParam spaceId:BigInteger,
+        @RequestParam setId:BigInteger,
     ): Boolean {
         return true
     }

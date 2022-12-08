@@ -7,18 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigInteger
 
-@Tag(name = "QuizS : Quiz API")
+@Tag(name = "QuizS : Space API")
 @RestController
 @RequestMapping("/")
-class Quiz(private val todoService: TodoService) {
+class SpaceApi(private val todoService: TodoService) {
 
-    @Operation(summary = "그룹내퀴즈들불러오기")
-    @GetMapping("/findQuizBySetId")
-    fun findQuizBySetId(
+    @Operation(summary = "내가속한그룹불러오기")
+    @GetMapping("/findAllSpace")
+    fun findAllSpace(
         @RequestParam accessToken:String,
-        @RequestParam setId:BigInteger,
     ): Boolean {
         return true
     }

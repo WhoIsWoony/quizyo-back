@@ -1,8 +1,8 @@
 package com.whoiswoony.springtutorial.repository
 
-import com.whoiswoony.springtutorial.controller.Quiz
+import com.whoiswoony.springtutorial.controller.QuizApi
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface QuizRepo: JpaRepository<Quiz, String>
+interface QuizRepo: JpaRepository<QuizApi, String>

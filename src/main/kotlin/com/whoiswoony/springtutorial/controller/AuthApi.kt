@@ -3,7 +3,6 @@ package com.whoiswoony.springtutorial.controller
 import com.whoiswoony.springtutorial.service.TodoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "QuizS : Auth API")
 @RestController
 @RequestMapping("/")
-class Auth(private val todoService: TodoService) {
+class AuthApi(private val todoService: TodoService) {
 
     @Operation(summary = "로그인")
     @PostMapping("/signIn")
