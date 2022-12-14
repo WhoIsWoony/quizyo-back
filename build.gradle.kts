@@ -51,6 +51,12 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-ui:1.6.13")
 	implementation("org.springdoc:springdoc-openapi-kotlin:1.6.13")
 
+	//Logger
+	implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
+
+	//H2 Database
+	runtimeOnly("com.h2database:h2")
+
 	//JUnit = Kotest + mockk
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.mockk:mockk:1.13.2")
