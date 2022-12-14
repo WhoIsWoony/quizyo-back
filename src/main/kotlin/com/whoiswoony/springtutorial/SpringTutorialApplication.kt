@@ -9,8 +9,10 @@ class SpringTutorialApplication
 
 val logger = KotlinLogging.logger{}
 const val TEST_URL = "http://localhost:8080"
+
 fun main(args: Array<String>) {
-	logger.info ("$TEST_URL/h2-console")
+	logger.info ("H2 DB : $TEST_URL/h2-console")
+	logger.info ("SWAGGER : $TEST_URL/swagger-ui/index.html")
 
 	runApplication<SpringTutorialApplication>(*args)
 }
