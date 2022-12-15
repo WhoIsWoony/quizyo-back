@@ -18,12 +18,15 @@ class GroupController(private val groupService: GroupService){
     @Operation(summary = "그룹 생성", description = "그룹을 생성합니다.")
     @PostMapping("/saveGroup")
     fun saveGroup(@RequestBody groupRequest: GroupRequest):GroupResponse {
-        return groupService.saveGroup(groupRequest)
+        var group = groupRequest.toEntity()
+        group = groupService.saveGroup(group)
+        return group.toResponse()
     }
 
     @Operation(summary = "가장 최근에 추가된 그룹 반환", description = "가장 최근에 추가된 그룹을 반환합니다.")
     @GetMapping("/getGroup")
     fun getGroup():GroupResponse {
-        return groupService.getLastAddGroup()
+        val group = groupService.getLastAddGroup()
+        return group.toResponse()
     }
 }

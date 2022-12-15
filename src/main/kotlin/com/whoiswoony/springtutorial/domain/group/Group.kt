@@ -15,8 +15,5 @@ class Group(
     var title: String,
     var description: String,
 ){
-    fun toResponse() = GroupResponse(
-        title = title,
-        description = description
-    )
+    fun toResponse() = GroupResponse(title, description)
 }

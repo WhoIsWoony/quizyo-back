@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class GroupService(private val groupRepository: GroupRepository) {
-    fun saveGroup(groupRequest: GroupRequest): GroupResponse {
-        var group = groupRequest.toEntity()
-        group = groupRepository.save(group)
-        return group.toResponse()
+    fun saveGroup(group: Group): Group {
+        return groupRepository.save(group)
     }
 
-    fun getLastAddGroup():GroupResponse {
-        val group = groupRepository.findFirstByOrderByIdAsc()
-        return group.toResponse()
+    fun getLastAddGroup():Group {
+        return groupRepository.findFirstByOrderByIdAsc()
     }
 }
