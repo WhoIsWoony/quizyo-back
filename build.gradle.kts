@@ -54,6 +54,10 @@ dependencies {
 	//Logger
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
 
+	//JWT + Security
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("io.jsonwebtoken:jjwt:0.9.1") // jwt 방식을 사용
+
 	//H2 Database
 	runtimeOnly("com.h2database:h2")
 
