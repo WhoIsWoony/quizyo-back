@@ -13,8 +13,12 @@ import javax.servlet.http.HttpServletRequest
 class JwtUtils(private val userDetailsService: UserDetailsService) {
     val secretKey: String = "RfUjXn2r5u7x!A%D*G-KaPdSgVkYp3s6"
 
+    //microSec * Sec * Min
     // Token 만료시간 : 1Hour
     private val expireTime = 1000L * 60 * 60
+
+    // TestToken 만료시간 : 5 sec
+    private val expireTimeTest = 1000L * 5
 
     //Token 생성
     fun createToken(email:String, roles:MutableSet<Authority>):String {
@@ -24,7 +28,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
 
         //jwt 시간 정보 : 현재시간, 만료시간
         val now = Date()
-        val expiredAt = Date(now.time + expireTime)
+        val expiredAt = Date(now.time + expireTimeTest)
 
         //jwt 생성 : 위 정보 바탕으로
         val jwt = Jwts.builder()
@@ -76,14 +80,22 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
             return !claims.body.expiration.before(Date())
         }catch (e:Exception){
             when(e){
-                is SecurityException, is MalformedJwtException ->
+                is SecurityException, is MalformedJwtException ->{
                     logger.error("잘못된 JWT 서명입니다.")
-                is ExpiredJwtException ->
+                    throw IllegalArgumentException("잘못된 JWT 서명입니다.")
+                }
+                is ExpiredJwtException ->{
                     logger.error("만료된 JWT 토큰입니다.")
-                is UnsupportedJwtException ->
+                    throw IllegalArgumentException("만료된 JWT 토큰입니다.")
+                }
+                is UnsupportedJwtException -> {
                     logger.error("지원되지 않는 JWT 토큰입니다.")
-                is IllegalArgumentException ->
+                    throw IllegalArgumentException("지원되지 않는 JWT 토큰입니다.")
+                }
+                is IllegalArgumentException ->{
                     logger.error("JWT 토큰이 잘못되었습니다.")
+                    throw IllegalArgumentException("JWT 토큰이 잘못되었습니다.")
+                }
             }
         }
         return false
