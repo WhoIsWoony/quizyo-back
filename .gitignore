@@ -1,3 +1,6 @@
+### secret key ###
+/src/main/resources/application.properties com
+
 HELP.md
 .gradle
 build/

@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.config.security
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
@@ -8,6 +9,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class JwtAuthenticationFilter(private val jwtUtils: JwtUtils): OncePerRequestFilter() {
+
+    @Value("\${jwt.access-token-secret}")
+    lateinit var accessTokenSecret: String
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -17,9 +22,9 @@ class JwtAuthenticationFilter(private val jwtUtils: JwtUtils): OncePerRequestFil
         val token = jwtUtils.resolveToken(request)
 
         // token 검증시 유효할 시 : 관리토큰 생성 후 Spring Security에게 위임
-        if (token != null && jwtUtils.isValid(token)) {
+        if (token != null && jwtUtils.isValid(token, "")) {
             // JWT로 AuthenticationToken 생성
-            val authentication: Authentication = jwtUtils.getAuthentication(token)
+            val authentication: Authentication = jwtUtils.getAuthentication(token, accessTokenSecret)
             // 생성된 AuthenticationToken을 SecurityContext가 관리하도록 설정
             SecurityContextHolder.getContext().authentication = authentication
         }
