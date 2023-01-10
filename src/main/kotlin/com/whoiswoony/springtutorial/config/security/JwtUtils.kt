@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest
 
 @Component
 class JwtUtils(private val userDetailsService: UserDetailsService) {
-    val secretKey: String = "RfUjXn2r5u7x!A%D*G-KaPdSgVkYp3s6"
 
     //microSec * Sec * Min
     // Token 만료시간 : 1Hour
@@ -21,7 +20,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
     private val expireTimeTest = 1000L * 5
 
     //Token 생성
-    fun createToken(email:String, roles:MutableSet<Authority>):String {
+    fun createToken(email:String, roles:MutableSet<Authority>, secretKey:String) : String {
         //jwt 권한 정보 : 고유ID, 권한
         val claims = Jwts.claims().setSubject(email)
         claims["roles"] = roles
@@ -41,14 +40,14 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
     }
 
     //Token으로부터 Spring Security의 권한 정보 획득
-    fun getAuthentication(token:String):Authentication{
-        val email = getEmail(token)
+    fun getAuthentication(token:String, secretKey:String):Authentication{
+        val email = getEmail(token, secretKey)
         val userDetails = userDetailsService.loadUserByUsername(email)
         return UsernamePasswordAuthenticationToken(userDetails,"", userDetails.authorities)
     }
 
     //Token으로부터 유저 email 획득
-    private fun getEmail(token:String): String {
+    private fun getEmail(token:String, secretKey:String): String {
         val parser = Jwts.parser().setSigningKey(secretKey)
         val claims = parser.parseClaimsJws(token)
         return claims.body.subject
@@ -72,7 +71,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
     }
 
     //Token 검증
-    fun isValid(token: String):Boolean{
+    fun isValid(token: String, secretKey:String):Boolean{
         try{
             //정상적으로 token을 해석할 수 있으면 valid
             val parser = Jwts.parser().setSigningKey(secretKey)
