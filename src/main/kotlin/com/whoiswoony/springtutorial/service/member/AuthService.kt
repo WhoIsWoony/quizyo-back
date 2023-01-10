@@ -8,6 +8,7 @@ import com.whoiswoony.springtutorial.dto.LoginRequest
 import com.whoiswoony.springtutorial.dto.LoginResponse
 import com.whoiswoony.springtutorial.dto.RegisterRequest
 import com.whoiswoony.springtutorial.logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -18,6 +19,9 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtils: JwtUtils
 ) {
+
+    @Value("\${jwt.access-token-secret}")
+    lateinit var accessTokenSecret: String
 
     fun login(loginRequest: LoginRequest) : LoginResponse {
         val member = memberRepository.findByEmail(loginRequest.email)
@@ -30,7 +34,7 @@ class AuthService(
             throw BadCredentialsException("잘못된 계정정보 입니다.")
 
         //token 생성
-        val token = jwtUtils.createToken(member.email, member.roles)
+        val token = jwtUtils.createToken(member.email, member.roles, accessTokenSecret)
 
         return LoginResponse(token)
     }
