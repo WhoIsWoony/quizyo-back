@@ -10,3 +10,7 @@
 5. [프로젝트 설정 JPA, MariaDB](https://whoiswoony.com/55)
 6. [RestApi - Controller](https://whoiswoony.com/66)
 7. [RestApi - Swagger 적용기](https://whoiswoony.com/70)
+
+# TODO
+- [ ] TOKEN 관련 에러 핸들링, 메세지 반환 필요
+- [ ] REFRESH TOKEN 발급 및 관련 로직 필요
