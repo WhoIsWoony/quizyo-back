@@ -1,6 +1,8 @@
 package com.whoiswoony.springtutorial.service.member
 
 import com.whoiswoony.springtutorial.config.security.JwtUtils
+import com.whoiswoony.springtutorial.controller.exception.CustomException
+import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.Authority
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
@@ -27,11 +29,11 @@ class AuthService(
         val member = memberRepository.findByEmail(loginRequest.email)
 
         //존재하지 않는 email
-        member ?: throw BadCredentialsException("잘못된 계정정보 입니다.")
+        member ?: throw CustomException(ErrorCode.NOT_EXIST_EMAIL)
 
         //비밀번호 불일치
         if(!passwordEncoder.matches(loginRequest.password, member.password))
-            throw BadCredentialsException("잘못된 계정정보 입니다.")
+            throw CustomException(ErrorCode.INVALID_PASSWORD)
 
         //token 생성
         val token = jwtUtils.createToken(member.email, member.roles, accessTokenSecret)
