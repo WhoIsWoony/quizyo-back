@@ -31,7 +31,12 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
             "/swagger-ui/**",
 
             /* 회원가입과 로그인 */
-            "/auth/**",)
+            "/auth/**",
+
+            /* h2 콘솔 */
+            "/h2-console/**"
+
+        )
     }
 
     @Bean

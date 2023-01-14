@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name="유저", description = "유저관련 api 입니다")
 @RestController
 @RequestMapping("/user/")
-class UserController(private val authService: AuthService) {
+class MemberController(private val authService: AuthService) {
     @Operation(summary = "닉네임변경", description = "닉네임 변경 테스트")
     @PostMapping("/changeNickname")
     fun changeNickname(): String {
