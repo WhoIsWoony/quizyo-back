@@ -6,11 +6,8 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.*
 import com.whoiswoony.springtutorial.dto.LoginRequest
 import com.whoiswoony.springtutorial.dto.RefreshTokenRequest
-import com.whoiswoony.springtutorial.dto.TokenResponse
+import com.whoiswoony.springtutorial.dto.Token
 import com.whoiswoony.springtutorial.dto.RegisterRequest
-import com.whoiswoony.springtutorial.logger
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -21,7 +18,7 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtils: JwtUtils
 ) {
-    fun login(loginRequest: LoginRequest) : TokenResponse {
+    fun login(loginRequest: LoginRequest) : Token {
         val member = memberRepository.findByEmail(loginRequest.email)
 
         //존재하지 않는 email
@@ -44,7 +41,7 @@ class AuthService(
 
         refreshTokenRepository.save(refreshTokenEntity)
 
-        return TokenResponse(accessToken, refreshToken)
+        return Token(accessToken, refreshToken)
     }
 
     fun register(registerRequest: RegisterRequest){
@@ -68,7 +65,7 @@ class AuthService(
         }
     }
 
-    fun refreshToken(refreshTokenRequest: RefreshTokenRequest): TokenResponse {
+    fun refreshToken(refreshTokenRequest: RefreshTokenRequest): Token {
         // refresh token db에서 가져오기
         val refreshToken = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
 
@@ -90,6 +87,6 @@ class AuthService(
 
         refreshTokenRepository.delete(refreshToken)
         refreshTokenRepository.save(refreshTokenEntity)
-        return TokenResponse(newAccessToken, newRefreshToken)
+        return Token(newAccessToken, newRefreshToken)
     }
 }
