@@ -8,6 +8,7 @@ import com.whoiswoony.springtutorial.dto.LoginRequest
 import com.whoiswoony.springtutorial.dto.RefreshTokenRequest
 import com.whoiswoony.springtutorial.dto.Token
 import com.whoiswoony.springtutorial.dto.RegisterRequest
+import com.whoiswoony.springtutorial.service.member.Util.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -16,7 +17,8 @@ class AuthService(
     private val memberRepository: MemberRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtUtils: JwtUtils
+    private val jwtUtils: JwtUtils,
+    private val validation: Validation
 ) {
     fun login(loginRequest: LoginRequest) : Token {
         val member = memberRepository.findByEmail(loginRequest.email)
@@ -45,6 +47,14 @@ class AuthService(
     }
 
     fun register(registerRequest: RegisterRequest){
+        //이메일 형식 확인
+        if(!validation.emailValidation(registerRequest.email))
+            throw CustomException(ErrorCode.INVALID_EMAIL_FORM)
+
+        //비밀번호 형식 확인
+        if(!validation.passwordValidation(registerRequest.password))
+            throw CustomException(ErrorCode.INVALID_PASSWORD_FORM)
+
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
 
