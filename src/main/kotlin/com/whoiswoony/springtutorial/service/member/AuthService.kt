@@ -4,10 +4,7 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.*
-import com.whoiswoony.springtutorial.dto.LoginRequest
-import com.whoiswoony.springtutorial.dto.RefreshTokenRequest
-import com.whoiswoony.springtutorial.dto.Token
-import com.whoiswoony.springtutorial.dto.RegisterRequest
+import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.service.member.Util.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -106,5 +103,11 @@ class AuthService(
         refreshTokenRepository.delete(refreshToken)
         refreshTokenRepository.save(refreshTokenEntity)
         return Token(newAccessToken, newRefreshToken)
+    }
+
+    fun checkDuplicatedEmail(checkDuplicatedEmailRequest: CheckDuplicatedEmailRequest): CheckDuplicatedResponse{
+        val member = memberRepository.findByEmail(checkDuplicatedEmailRequest.email)
+        member ?: return CheckDuplicatedResponse(false)
+        return CheckDuplicatedResponse(true)
     }
 }

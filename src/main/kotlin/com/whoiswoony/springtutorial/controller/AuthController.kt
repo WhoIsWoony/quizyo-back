@@ -30,8 +30,8 @@ class AuthController(private val authService: AuthService) {
         cookie.maxAge = 1 * 24 * 60 * 60
 
         // optional properties
-        cookie.secure = true
-        cookie.isHttpOnly = true
+        cookie.secure = false
+        cookie.isHttpOnly = false
         cookie.path = "/"
 
         // add cookie to response
@@ -50,5 +50,11 @@ class AuthController(private val authService: AuthService) {
     @PostMapping("/refreshToken")
     fun refreshToken(@RequestBody refreshTokenRequest: RefreshTokenRequest): Token {
         return authService.refreshToken(refreshTokenRequest)
+    }
+
+    @Operation(summary = "email 중복 체크", description = "email 중복을 체크합니다.")
+    @PostMapping("/checkDuplicatedEmail")
+    fun checkDuplicatedEmail(@RequestBody checkDuplicatedEmailRequest: CheckDuplicatedEmailRequest): CheckDuplicatedResponse {
+        return authService.checkDuplicatedEmail(checkDuplicatedEmailRequest)
     }
 }
