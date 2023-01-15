@@ -106,10 +106,10 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
     }
 
     //Token 검증
-    fun isValid(token: String, secretKey:String):Boolean{
+    fun isValid(token: String):Boolean{
         try{
             //정상적으로 token을 해석할 수 있으면 valid
-            val parser = Jwts.parser().setSigningKey(secretKey)
+            val parser = Jwts.parser().setSigningKey(accessTokenSecret)
             val claims = parser.parseClaimsJws(token)
             return !claims.body.expiration.before(Date())
         }catch (e:Exception){
