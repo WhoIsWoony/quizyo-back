@@ -7,7 +7,7 @@ import javax.persistence.*;
 class RefreshToken(
 
         @JoinColumn(name = "member")
-        @OneToOne(fetch = FetchType.LAZY)
+        @ManyToOne(fetch = FetchType.LAZY)
         @JsonIgnore
         var member: Member,
 
