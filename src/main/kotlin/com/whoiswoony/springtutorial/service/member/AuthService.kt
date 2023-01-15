@@ -51,9 +51,17 @@ class AuthService(
         if(!validation.emailValidation(registerRequest.email))
             throw CustomException(ErrorCode.INVALID_EMAIL_FORM)
 
+        //이메일 db 존재시 true, 아닐시 false 반환
+        if(validation.emailDuplicationCheck(memberRepository, registerRequest.email))
+            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
+
         //비밀번호 형식 확인
         if(!validation.passwordValidation(registerRequest.password))
             throw CustomException(ErrorCode.INVALID_PASSWORD_FORM)
+        
+        //닉네임 db 존재시 true, 아닐시 false 반환
+        if(validation.nicknameDuplicationCheck(memberRepository, registerRequest.nickname))
+            throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
 
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
@@ -71,7 +79,7 @@ class AuthService(
         try{
             memberRepository.save(member)
         }catch (e:Exception){
-            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
+            throw CustomException(ErrorCode.REGISTER_ERROR)
         }
     }
 

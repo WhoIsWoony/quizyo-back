@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.service.member.Util
 
+import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import org.springframework.stereotype.Service
 import java.util.regex.Pattern
 
@@ -22,5 +23,13 @@ class Validation {
     fun passwordValidation(password:String): Boolean {
         // 정규식 : 비밀번호는 최소 한개의 문자, 숫자, 특수 문자로 이루어진 8자 이상의 조합
         return regexValidation("""^(?=.*[A-Za-z])(?=.*\d)(?=.*[${'$'}@${'$'}!%*#?&])[A-Za-z\d${'$'}@${'$'}!%*#?&]{8,}${'$'}""", password)
+    }
+
+    fun emailDuplicationCheck(memberRepository: MemberRepository, email: String): Boolean {
+        return memberRepository.findByEmail(email) != null
+    }
+
+    fun nicknameDuplicationCheck(memberRepository: MemberRepository, nickname: String): Boolean {
+        return memberRepository.findByNickname(nickname) != null
     }
 }
