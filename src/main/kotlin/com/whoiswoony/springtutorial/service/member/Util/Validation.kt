@@ -24,12 +24,4 @@ class Validation {
         // 정규식 : 비밀번호는 최소 한개의 문자, 숫자, 특수 문자로 이루어진 8자 이상의 조합
         return regexValidation("""^(?=.*[A-Za-z])(?=.*\d)(?=.*[${'$'}@${'$'}!%*#?&])[A-Za-z\d${'$'}@${'$'}!%*#?&]{8,}${'$'}""", password)
     }
-
-    fun emailDuplicationCheck(memberRepository: MemberRepository, email: String): Boolean {
-        return memberRepository.findByEmail(email) != null
-    }
-
-    fun nicknameDuplicationCheck(memberRepository: MemberRepository, nickname: String): Boolean {
-        return memberRepository.findByNickname(nickname) != null
-    }
 }

@@ -5,12 +5,16 @@ import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
+import javax.validation.constraints.Email
 
 @CrossOrigin(origins = ["*"])
 @Tag(name="유저", description = "유저관련 api 입니다")
@@ -53,8 +57,14 @@ class AuthController(private val authService: AuthService) {
     }
 
     @Operation(summary = "email 중복 체크", description = "email 중복을 체크합니다.")
-    @PostMapping("/checkDuplicatedEmail")
-    fun checkDuplicatedEmail(@RequestBody checkDuplicatedEmailRequest: CheckDuplicatedEmailRequest): CheckDuplicatedResponse {
-        return authService.checkDuplicatedEmail(checkDuplicatedEmailRequest)
+    @GetMapping("/checkDuplicatedEmail/{email}")
+    fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
+        return authService.checkDuplicatedEmail(email)
+    }
+
+    @Operation(summary = "nickname 중복 체크", description = "nickname 중복을 체크합니다.")
+    @GetMapping("/checkDuplicatedNickname/{nickname}")
+    fun checkDuplicatedNickname(@PathVariable nickname: String): Boolean {
+        return authService.checkDuplicatedNickname(nickname)
     }
 }
