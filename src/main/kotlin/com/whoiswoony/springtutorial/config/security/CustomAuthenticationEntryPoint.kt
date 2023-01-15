@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.config.security
 
+import com.whoiswoony.springtutorial.logger
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import javax.servlet.http.HttpServletRequest

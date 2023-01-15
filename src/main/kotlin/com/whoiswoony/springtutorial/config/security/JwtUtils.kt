@@ -3,6 +3,7 @@ package com.whoiswoony.springtutorial.config.security
 import com.whoiswoony.springtutorial.domain.member.Authority
 import com.whoiswoony.springtutorial.logger
 import io.jsonwebtoken.*
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
@@ -12,43 +13,77 @@ import javax.servlet.http.HttpServletRequest
 @Component
 class JwtUtils(private val userDetailsService: UserDetailsService) {
 
+    @Value("\${jwt.access-token-secret}")
+    lateinit var accessTokenSecret: String
+
+    @Value("\${jwt.refresh-token-secret}")
+    lateinit var refreshTokenSecret: String
+
     //microSec * Sec * Min
     // Token 만료시간 : 1Hour
-    private val expireTime = 1000L * 60 * 60
+    private val accessExpireTime = 1000L * 60 * 60
 
     // TestToken 만료시간 : 5 sec
-    private val expireTimeTest = 1000L * 5
+    private val accessExpireTimeTest = 1000L * 5
+
+    // RefreshToken 만료시간 : 1 Day
+    private val refreshExpireTime = 1000L * 60 * 60 * 24
 
     //Token 생성
-    fun createToken(email:String, roles:MutableSet<Authority>, secretKey:String) : String {
+    fun createAccessToken(email:String, roles:MutableSet<Authority>) : String {
         //jwt 권한 정보 : 고유ID, 권한
         val claims = Jwts.claims().setSubject(email)
         claims["roles"] = roles
 
         //jwt 시간 정보 : 현재시간, 만료시간
         val now = Date()
-        val expiredAt = Date(now.time + expireTimeTest)
+        val expiredAt = Date(now.time + accessExpireTimeTest)
 
         //jwt 생성 : 위 정보 바탕으로
         val jwt = Jwts.builder()
         jwt.setClaims(claims)
         jwt.setIssuedAt(now)
         jwt.setExpiration(expiredAt)
-        jwt.signWith(SignatureAlgorithm.HS256, secretKey)
+        jwt.signWith(SignatureAlgorithm.HS256, accessTokenSecret)
+
+        return jwt.compact()
+    }
+
+    fun getRandomString(length: Int) : String {
+        val charset = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz0123456789"
+        return (1..length)
+                .map { charset.random() }
+                .joinToString("")
+    }
+
+    fun createRefreshToken(): String {
+        //jwt 권한 정보 : 고유ID, 권한
+        val claims = Jwts.claims().setSubject(getRandomString(10))
+
+        //jwt 시간 정보 : 현재시간, 만료시간
+        val now = Date()
+        val expiredAt = Date(now.time + refreshExpireTime)
+
+        //jwt 생성 : 위 정보 바탕으로
+        val jwt = Jwts.builder()
+        jwt.setClaims(claims)
+        jwt.setIssuedAt(now)
+        jwt.setExpiration(expiredAt)
+        jwt.signWith(SignatureAlgorithm.HS256, refreshTokenSecret)
 
         return jwt.compact()
     }
 
     //Token으로부터 Spring Security의 권한 정보 획득
-    fun getAuthentication(token:String, secretKey:String):Authentication{
-        val email = getEmail(token, secretKey)
+    fun getAuthentication(token:String):Authentication{
+        val email = getEmail(token)
         val userDetails = userDetailsService.loadUserByUsername(email)
         return UsernamePasswordAuthenticationToken(userDetails,"", userDetails.authorities)
     }
 
     //Token으로부터 유저 email 획득
-    private fun getEmail(token:String, secretKey:String): String {
-        val parser = Jwts.parser().setSigningKey(secretKey)
+    private fun getEmail(token:String): String {
+        val parser = Jwts.parser().setSigningKey(accessTokenSecret)
         val claims = parser.parseClaimsJws(token)
         return claims.body.subject
     }
