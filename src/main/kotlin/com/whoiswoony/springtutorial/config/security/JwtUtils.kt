@@ -37,7 +37,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
 
         //jwt 시간 정보 : 현재시간, 만료시간
         val now = Date()
-        val expiredAt = Date(now.time + accessExpireTimeTest)
+        val expiredAt = Date(now.time + accessExpireTime)
 
         //jwt 생성 : 위 정보 바탕으로
         val jwt = Jwts.builder()
