@@ -61,7 +61,11 @@ class AuthService(
         //Member Role = USER로 설정
         member.roles = mutableSetOf(Authority("ROLE_USER", member))
 
-        memberRepository.save(member)
+        try{
+            memberRepository.save(member)
+        }catch (e:Exception){
+            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
+        }
     }
 
     fun refreshToken(refreshTokenRequest: RefreshTokenRequest): TokenResponse {
