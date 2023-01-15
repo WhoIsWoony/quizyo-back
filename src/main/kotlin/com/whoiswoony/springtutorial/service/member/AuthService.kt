@@ -68,7 +68,8 @@ class AuthService(
         // refresh token db에서 가져오기
         val refreshToken = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
 
-        refreshToken?: throw IllegalArgumentException("Refresh Token이 존재하지 않습니다.")
+        //잘못된 refresh token
+        refreshToken?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
 
         val member = refreshToken.member
 
