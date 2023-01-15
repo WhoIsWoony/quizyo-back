@@ -16,7 +16,10 @@ class Member(
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var roles: MutableSet<Authority> = mutableSetOf(),
 
+    @OneToOne(mappedBy = "member", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    val refreshToken: RefreshToken?=null,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: Long? = null,
 )

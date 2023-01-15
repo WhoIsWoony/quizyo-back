@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface MemberRepository:JpaRepository<Member, String>{
-    fun findByEmail(email:String):Member?
+interface RefreshTokenRepository:JpaRepository<RefreshToken, String> {
+    fun findByRefreshToken(refreshToken: String):RefreshToken?
 }
