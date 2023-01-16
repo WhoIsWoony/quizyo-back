@@ -1,5 +1,7 @@
 package com.whoiswoony.springtutorial.config.security
 
+import com.whoiswoony.springtutorial.controller.exception.CustomException
+import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.Authority
 import com.whoiswoony.springtutorial.logger
 import io.jsonwebtoken.*
@@ -114,21 +116,21 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
             return !claims.body.expiration.before(Date())
         }catch (e:Exception){
             when(e){
-                is SecurityException, is MalformedJwtException ->{
+                is SecurityException, is MalformedJwtException, is SignatureException ->{
                     logger.error("잘못된 JWT 서명입니다.")
-                    throw IllegalArgumentException("잘못된 JWT 서명입니다.")
+                    throw CustomException(ErrorCode.INVALID_TOKEN_SIGNATURE)
                 }
                 is ExpiredJwtException ->{
                     logger.error("만료된 JWT 토큰입니다.")
-                    throw IllegalArgumentException("만료된 JWT 토큰입니다.")
+                    throw CustomException(ErrorCode.EXPIRED_TOKEN)
                 }
                 is UnsupportedJwtException -> {
                     logger.error("지원되지 않는 JWT 토큰입니다.")
-                    throw IllegalArgumentException("지원되지 않는 JWT 토큰입니다.")
+                    throw CustomException(ErrorCode.NOT_ALLOWED_TOKEN)
                 }
                 is IllegalArgumentException ->{
                     logger.error("JWT 토큰이 잘못되었습니다.")
-                    throw IllegalArgumentException("JWT 토큰이 잘못되었습니다.")
+                    throw CustomException(ErrorCode.INVALID_TOKEN)
                 }
             }
         }
