@@ -50,12 +50,6 @@ class AuthController(private val authService: AuthService) {
         return authService.register(registerRequest)
     }
 
-    @Operation(summary = "refresh token 재발급", description = "refresh token을 재발급합니다.")
-    @PostMapping("/refreshToken")
-    fun refreshToken(@RequestBody refreshTokenRequest: RefreshTokenRequest): Token {
-        return authService.refreshToken(refreshTokenRequest)
-    }
-
     @Operation(summary = "email 중복 체크", description = "email 중복을 체크합니다.")
     @GetMapping("/checkDuplicatedEmail/{email}")
     fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
