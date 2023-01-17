@@ -1,6 +1,6 @@
 package com.whoiswoony.springtutorial.domain.member
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.whoiswoony.springtutorial.domain.quizset.QuizSet
 import javax.persistence.*
 
 @Entity
@@ -17,7 +17,10 @@ class Member(
     var roles: MutableSet<Authority> = mutableSetOf(),
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val refreshToken: MutableList<RefreshToken> = arrayListOf(),
+    val refreshTokens: MutableList<RefreshToken> = arrayListOf(),
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val quizSets: MutableList<QuizSet> = arrayListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
