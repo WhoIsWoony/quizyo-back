@@ -21,7 +21,7 @@ class SharedQuizSetService (
         val quizSet = quizSetRepository.findById(addSharedQuizSetRequest.quizSetId).orElse(null)
 
         //Quiz set 존재 X시, 오류 발생
-        quizSet ?: throw CustomException(ErrorCode.NOT_EXIST_QUIZ_SET_ID)
+        quizSet ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ_SET)
 
         val sharedQuizSet = SharedQuizSet(quizSet, member)
 

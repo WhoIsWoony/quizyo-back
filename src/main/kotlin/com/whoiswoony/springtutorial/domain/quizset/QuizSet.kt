@@ -16,6 +16,9 @@ class QuizSet (
     @JsonIgnore
     val member: Member,
 
+    @OneToMany(mappedBy = "quizSet")
+    val views:MutableList<QuizSetView> = mutableListOf(),
+
     @OneToMany(mappedBy = "quizSet", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     val sharedQuizSets: MutableList<SharedQuizSet> = mutableListOf(),
 
