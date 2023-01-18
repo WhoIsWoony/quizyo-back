@@ -31,4 +31,9 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
         val quizSetView = QuizSetView(quizSet, ipAddress)
         quizSetViewRepository.save(quizSetView)
     }
+
+    fun getMyQuizSet(memberEmail: String) : MutableList<QuizSet>? {
+        val member = memberRepository.findByEmail(memberEmail)!!
+        return member.id?.let { quizSetRepository.findQuizSetByMemberId(it) }
+    }
 }

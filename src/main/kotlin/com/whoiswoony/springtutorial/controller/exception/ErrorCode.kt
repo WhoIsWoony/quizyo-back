@@ -21,5 +21,4 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
 
     //QuizSet error code
     NOT_FOUND_QUIZ_SET(HttpStatus.BAD_REQUEST,"퀴즈셋을 찾을 수 없습니다.")
-
 }
