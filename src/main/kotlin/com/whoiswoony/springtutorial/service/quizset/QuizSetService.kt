@@ -4,6 +4,7 @@ import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.quizset.QuizSet
 import com.whoiswoony.springtutorial.domain.quizset.QuizSetRepository
 import com.whoiswoony.springtutorial.dto.AddQuizSetRequest
+import com.whoiswoony.springtutorial.dto.MyOwnQuizSetResponse
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,8 +19,22 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository, private 
         return quizSetRepository.findAll()
     }
 
-    fun getMyQuizSet(memberEmail: String) : MutableList<QuizSet>? {
+    fun myOwnQuizSet(memberEmail: String): MutableList<MyOwnQuizSetResponse>? {
         val member = memberRepository.findByEmail(memberEmail)!!
-        return member.id?.let { quizSetRepository.findQuizSetByMemberId(it) }
+        val myOwnQuizSets = member.id?.let { quizSetRepository.findQuizSetByMemberId(it) }
+        val quizSetsFromMyOwnQuizSets: MutableList<MyOwnQuizSetResponse> = mutableListOf()
+
+        if (myOwnQuizSets != null) {
+            for (ownQuizSet in myOwnQuizSets) {
+                val myOwnQuizSet = MyOwnQuizSetResponse(
+                    ownQuizSet.title,
+                    ownQuizSet.description,
+                    ownQuizSet.sharedQuizSets.count(),
+                    ownQuizSet.id
+                )
+                quizSetsFromMyOwnQuizSets.add(myOwnQuizSet)
+            }
+        }
+        return quizSetsFromMyOwnQuizSets
     }
 }

@@ -3,13 +3,11 @@ package com.whoiswoony.springtutorial.service.quizset
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
-import com.whoiswoony.springtutorial.domain.quizset.QuizSet
 import com.whoiswoony.springtutorial.domain.quizset.QuizSetRepository
 import com.whoiswoony.springtutorial.domain.quizset.SharedQuizSet
 import com.whoiswoony.springtutorial.domain.quizset.SharedQuizSetRepository
 import com.whoiswoony.springtutorial.dto.AddSharedQuizSetRequest
-import com.whoiswoony.springtutorial.dto.GetMySharedQuizSetResponse
-import org.apache.commons.lang3.mutable.Mutable
+import com.whoiswoony.springtutorial.dto.MySharedQuizSetResponse
 import org.springframework.stereotype.Service
 
 @Service
@@ -30,21 +28,21 @@ class SharedQuizSetService (
         sharedQuizSetRepository.save(sharedQuizSet)
     }
 
-    fun getMySharedQuizSet(memberEmail : String): MutableList<GetMySharedQuizSetResponse>? {
+    fun mySharedQuizSet(memberEmail : String): MutableList<MySharedQuizSetResponse>? {
         val member = memberRepository.findByEmail(memberEmail)!!
         val mySharedQuizSets = member.id?.let { sharedQuizSetRepository.findQuizSetByMemberId(it) }
-        val QuizSetsFromMySharedQuizSets: MutableList<GetMySharedQuizSetResponse> = mutableListOf()
+        val quizSetsFromMySharedQuizSets: MutableList<MySharedQuizSetResponse> = mutableListOf()
 
         if (mySharedQuizSets != null) {
             for (sharedQuizSet in mySharedQuizSets){
-                val mySharedQuizSet = GetMySharedQuizSetResponse(
+                val mySharedQuizSet = MySharedQuizSetResponse(
                     sharedQuizSet.quizSet.title,
                     sharedQuizSet.quizSet.description,
                     sharedQuizSet.quizSet.id
                 )
-                QuizSetsFromMySharedQuizSets.add(mySharedQuizSet)
+                quizSetsFromMySharedQuizSets.add(mySharedQuizSet)
             }
         }
-        return QuizSetsFromMySharedQuizSets
+        return quizSetsFromMySharedQuizSets
     }
 }

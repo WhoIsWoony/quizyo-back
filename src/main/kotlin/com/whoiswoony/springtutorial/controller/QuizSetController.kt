@@ -3,9 +3,7 @@ package com.whoiswoony.springtutorial.controller
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.quizset.QuizSet
-import com.whoiswoony.springtutorial.dto.AddQuizSetRequest
-import com.whoiswoony.springtutorial.dto.AddSharedQuizSetRequest
-import com.whoiswoony.springtutorial.dto.GetMySharedQuizSetResponse
+import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.service.quizset.QuizSetService
 import com.whoiswoony.springtutorial.service.quizset.SharedQuizSetService
 import io.swagger.v3.oas.annotations.Operation
@@ -43,15 +41,11 @@ class QuizSetController(private val quizSetService: QuizSetService, private val 
 
     @Operation(summary = "내 퀴즈셋 불러오기", description = "내 퀴즈셋을 불러옵니다.")
     @GetMapping("/getMyQuizSet")
-    fun getMyQuizSet() : MutableList<QuizSet>? {
+    fun getMyQuizSet() : GetMyQuizSetResponse? {
         val memberEmail = getMemberEmail()
-        return quizSetService.getMyQuizSet(memberEmail)
-    }
+        val myOwnQuizSetResponse = quizSetService.myOwnQuizSet(memberEmail)
+        val mySharedQuizSetResponse = sharedQuizSetService.mySharedQuizSet(memberEmail)
 
-    @Operation(summary = "퍼온 퀴즈셋 불러오기", description = "퍼온 퀴즈셋을 불러옵니다.")
-    @GetMapping("/getMySharedQuizSet")
-    fun getMySharedQuizSet() : MutableList<GetMySharedQuizSetResponse>? {
-        val memberEmail = getMemberEmail()
-        return sharedQuizSetService.getMySharedQuizSet(memberEmail)
+        return GetMyQuizSetResponse(myOwnQuizSetResponse, mySharedQuizSetResponse)
     }
 }

@@ -7,9 +7,8 @@ import javax.persistence.*
 
 @Entity
 class SharedQuizSet(
-    @JoinColumn(name = "quizSet")
+    @JoinColumn(name = "quizSet", unique = true)
     @ManyToOne
-    @Column(unique = true)
     @JsonIgnore
     val quizSet: QuizSet,
 
