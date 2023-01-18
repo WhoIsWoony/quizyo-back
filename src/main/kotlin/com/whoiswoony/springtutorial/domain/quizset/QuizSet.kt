@@ -15,6 +15,9 @@ class QuizSet (
     @JsonIgnore
     val member: Member,
 
+    @OneToMany(mappedBy = "quizSet")
+    val views:MutableList<QuizSetView> = mutableListOf(),
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id:Long? = null
