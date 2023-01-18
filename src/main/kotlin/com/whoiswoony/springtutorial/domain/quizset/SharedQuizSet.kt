@@ -2,22 +2,21 @@ package com.whoiswoony.springtutorial.domain.quizset
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.whoiswoony.springtutorial.domain.member.Member
-import com.whoiswoony.springtutorial.domain.member.RefreshToken
+import java.util.*
 import javax.persistence.*
 
 @Entity
-class QuizSet (
-    val title:String,
-
-    val description:String,
+class SharedQuizSet(
+    @JoinColumn(name = "quizSet")
+    @ManyToOne
+    @Column(unique = true)
+    @JsonIgnore
+    val quizSet: QuizSet,
 
     @JoinColumn(name = "member")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JsonIgnore
     val member: Member,
-
-    @OneToMany(mappedBy = "quizSet", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val sharedQuizSets: MutableList<SharedQuizSet> = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

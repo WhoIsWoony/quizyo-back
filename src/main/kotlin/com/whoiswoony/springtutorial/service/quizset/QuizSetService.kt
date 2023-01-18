@@ -17,4 +17,9 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository, private 
     fun getQuizSet(): MutableList<QuizSet> {
         return quizSetRepository.findAll()
     }
+
+    fun getMyQuizSet(memberEmail: String) : MutableList<QuizSet>? {
+        val member = memberRepository.findByEmail(memberEmail)!!
+        return member.id?.let { quizSetRepository.findQuizSetByMemberId(it) }
+    }
 }

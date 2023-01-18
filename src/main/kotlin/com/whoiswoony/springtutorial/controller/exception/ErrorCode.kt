@@ -17,6 +17,8 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     INVALID_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, "잘못된 JWT 서명입니다."),
     EXPIRED_TOKEN(HttpStatus.FORBIDDEN, "만료된 JWT 토큰입니다."),
     NOT_ALLOWED_TOKEN(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 토큰입니다."),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"JWT 토큰이 잘못되었습니다.")
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"JWT 토큰이 잘못되었습니다."),
 
+    //QuizSet error code
+    NOT_EXIST_QUIZ_SET_ID(HttpStatus.BAD_REQUEST, "존재하지 않는 Quiz Set 입니다.")
 }
