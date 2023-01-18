@@ -19,7 +19,7 @@ class JwtAuthenticationFilter(private val jwtUtils: JwtUtils): OncePerRequestFil
         val token = jwtUtils.resolveToken(request)
 
         // token 검증시 유효할 시 : 관리토큰 생성 후 Spring Security에게 위임
-        if (token != null && jwtUtils.isValid(token, "")) {
+        if (token != null && jwtUtils.isValid(token)) {
             // JWT로 AuthenticationToken 생성
             val authentication: Authentication = jwtUtils.getAuthentication(token)
             // 생성된 AuthenticationToken을 SecurityContext가 관리하도록 설정

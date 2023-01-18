@@ -6,6 +6,7 @@ plugins {
 	id("org.springdoc.openapi-gradle-plugin") version "1.5.0"	//Swagger
 
 	kotlin("jvm") version "1.6.21"
+	kotlin("kapt") version "1.6.21"
 	kotlin("plugin.spring") version "1.6.21"
 
 	kotlin("plugin.jpa") version "1.6.21" //JPA
@@ -46,6 +47,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-allopen") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
 	implementation("org.jetbrains.kotlin:kotlin-noarg") //Kotlin에서 Hibernate를 원할하게 사용하기 위함
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin") //Json 라이브러리
+
+	//QueryDSL
+	implementation("com.querydsl:querydsl-jpa:5.0.0")
+	kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
 
 	//Swagger = springdoc-openapi
 	implementation("org.springdoc:springdoc-openapi-ui:1.6.13")
