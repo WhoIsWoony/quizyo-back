@@ -1,15 +1,10 @@
 package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
-import com.whoiswoony.springtutorial.domain.quizset.QuizSet
-<<<<<<< HEAD
 import com.whoiswoony.springtutorial.dto.*
-=======
 import com.whoiswoony.springtutorial.dto.AddQuizSetRequest
 import com.whoiswoony.springtutorial.dto.QuizSetResponse
 import com.whoiswoony.springtutorial.dto.AddSharedQuizSetRequest
-import com.whoiswoony.springtutorial.dto.GetMySharedQuizSetResponse
->>>>>>> 52208348cf3c1f91a98d504a2879fc07339c4f3e
 import com.whoiswoony.springtutorial.service.quizset.QuizSetService
 import com.whoiswoony.springtutorial.service.quizset.SharedQuizSetService
 import io.swagger.v3.oas.annotations.Operation
