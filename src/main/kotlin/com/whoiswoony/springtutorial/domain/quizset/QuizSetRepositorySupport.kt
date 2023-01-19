@@ -17,7 +17,7 @@ class QuizSetRepositorySupport(private val jpaQueryFactory:JPAQueryFactory):Quer
             .from(quizSetView)
             .groupBy(quizSetView.quizSet)
             .rightJoin(quizSetView.quizSet, quizSet)
-            .orderBy(quizSet.count().asc())
+            .orderBy(quizSet.count().desc())
             .limit(10)
             .fetch()
     }
