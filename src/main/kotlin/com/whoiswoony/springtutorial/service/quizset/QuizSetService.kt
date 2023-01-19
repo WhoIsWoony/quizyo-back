@@ -20,10 +20,29 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
         val quizSet = QuizSet(addQuizSetRequest.title, addQuizSetRequest.description, member)
         quizSetRepository.save(quizSet)
     }
+
+    fun getQuizSet(): MutableList<QuizSetResponse> {
+        val quizSets = quizSetRepository.findAll()
+        val quizSetResponses: MutableList<QuizSetResponse> = mutableListOf()
+
+        for(quizSet in quizSets){
+            val quizSetResponse = QuizSetResponse(
+                title = quizSet.title,
+                description = quizSet.description,
+                shareNum = quizSet.sharedQuizSets.count(),
+                viewNum = quizSet.views.count(),
+                id = quizSet.id
+            )
+            quizSetResponses.add(quizSetResponse)
+        }
+        return quizSetResponses
+    }
+
+    /*
     fun getQuizSet(): MutableList<QuizSetResponse> {
         return quizSetRepositorySupport.findTop10()
     }
-
+*/
     fun addQuizSetView(quizSetId:Long, ipAddress:String){
         val quizSet = quizSetRepository.findByIdOrNull(quizSetId)
         quizSet ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ_SET)
