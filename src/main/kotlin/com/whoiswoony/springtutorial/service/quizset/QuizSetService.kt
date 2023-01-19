@@ -22,27 +22,29 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
     }
 
     fun getQuizSet(): MutableList<QuizSetResponse> {
-        val quizSets = quizSetRepository.findAll()
-        val quizSetResponses: MutableList<QuizSetResponse> = mutableListOf()
+        val result = quizSetRepository.findAll()
+        val quizSets: MutableList<QuizSetResponse> = mutableListOf()
 
-        for(quizSet in quizSets){
-            val quizSetResponse = QuizSetResponse(
-                title = quizSet.title,
-                description = quizSet.description,
-                shareNum = quizSet.sharedQuizSets.count(),
-                viewNum = quizSet.views.count(),
-                id = quizSet.id
-            )
-            quizSetResponses.add(quizSetResponse)
+        if (result != null) {
+            for (quizSet in result) {
+                val quizSet = QuizSetResponse(
+                    title = quizSet.title,
+                    description = quizSet.description,
+                    shareNum = quizSet.sharedQuizSets.count().toLong(),
+                    viewNum = quizSet.views.count().toLong(),
+                    id = quizSet.id!!
+                )
+                quizSets.add(quizSet)
+            }
         }
-        return quizSetResponses
+        return quizSets
     }
 
-    /*
-    fun getQuizSet(): MutableList<QuizSetResponse> {
+
+    fun getFindTop10(): MutableList<QuizSetResponse> {
         return quizSetRepositorySupport.findTop10()
     }
-*/
+
     fun addQuizSetView(quizSetId:Long, ipAddress:String){
         val quizSet = quizSetRepository.findByIdOrNull(quizSetId)
         quizSet ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ_SET)
@@ -61,9 +63,9 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
                 val myOwnQuizSet = QuizSetResponse(
                     title = ownQuizSet.title,
                     description = ownQuizSet.description,
-                    shareNum = ownQuizSet.sharedQuizSets.count(),
-                    viewNum = ownQuizSet.views.count(),
-                    id = ownQuizSet.id
+                    shareNum = ownQuizSet.sharedQuizSets.count().toLong(),
+                    viewNum = ownQuizSet.views.count().toLong(),
+                    id = ownQuizSet.id!!
                 )
                 quizSetsFromMyOwnQuizSets.add(myOwnQuizSet)
             }

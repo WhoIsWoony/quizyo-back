@@ -40,9 +40,9 @@ class SharedQuizSetService (
                 val mySharedQuizSet = QuizSetResponse(
                     title = sharedQuizSet.quizSet.title,
                     description = sharedQuizSet.quizSet.description,
-                    shareNum = sharedQuizSet.quizSet.sharedQuizSets.count(),
-                    viewNum = sharedQuizSet.quizSet.views.count(),
-                    id = sharedQuizSet.quizSet.id
+                    shareNum = sharedQuizSet.quizSet.sharedQuizSets.count().toLong(),
+                    viewNum = sharedQuizSet.quizSet.views.count().toLong(),
+                    id = sharedQuizSet.quizSet.id!!
                 )
                 quizSetsFromMySharedQuizSets.add(mySharedQuizSet)
             }

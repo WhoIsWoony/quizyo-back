@@ -51,4 +51,10 @@ class QuizSetController(private val quizSetService: QuizSetService, private val 
 
         return GetMyQuizSetResponse(myOwnQuizSetResponse, mySharedQuizSetResponse)
     }
+
+    @Operation(summary = "추천 퀴즈셋 불러오기", description = "조회수 top10 퀴즈셋을 불러옵니다")
+    @GetMapping("/getRecommendedQuizSet")
+    fun getRecommendedQuizSet(): MutableList<QuizSetResponse> {
+        return quizSetService.getFindTop10()
+    }
 }

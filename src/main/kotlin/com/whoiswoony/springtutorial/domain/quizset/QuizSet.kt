@@ -1,12 +1,13 @@
 package com.whoiswoony.springtutorial.domain.quizset
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.querydsl.core.annotations.QueryProjection
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.member.RefreshToken
 import javax.persistence.*
 
 @Entity
-class QuizSet (
+class QuizSet @QueryProjection constructor(
     val title:String,
 
     val description:String,
