@@ -5,7 +5,6 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.quizset.*
 import com.whoiswoony.springtutorial.dto.AddQuizSetRequest
-import com.whoiswoony.springtutorial.dto.MyOwnQuizSetResponse
 import com.whoiswoony.springtutorial.dto.QuizSetResponse
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -33,18 +32,19 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
         quizSetViewRepository.save(quizSetView)
     }
 
-    fun myOwnQuizSet(memberEmail: String): MutableList<MyOwnQuizSetResponse>? {
+    fun myOwnQuizSet(memberEmail: String): MutableList<QuizSetResponse>? {
         val member = memberRepository.findByEmail(memberEmail)!!
-        val myOwnQuizSets = member.id?.let { quizSetRepository.findQuizSetByMemberId(it) }
-        val quizSetsFromMyOwnQuizSets: MutableList<MyOwnQuizSetResponse> = mutableListOf()
+        val myOwnQuizSets: MutableList<QuizSet> = member.quizSets
+        val quizSetsFromMyOwnQuizSets: MutableList<QuizSetResponse> = mutableListOf()
 
         if (myOwnQuizSets != null) {
             for (ownQuizSet in myOwnQuizSets) {
-                val myOwnQuizSet = MyOwnQuizSetResponse(
-                    ownQuizSet.title,
-                    ownQuizSet.description,
-                    ownQuizSet.sharedQuizSets.count(),
-                    ownQuizSet.id
+                val myOwnQuizSet = QuizSetResponse(
+                    title = ownQuizSet.title,
+                    description = ownQuizSet.description,
+                    shareNum = ownQuizSet.sharedQuizSets.count(),
+                    viewNum = ownQuizSet.views.count(),
+                    id = ownQuizSet.id
                 )
                 quizSetsFromMyOwnQuizSets.add(myOwnQuizSet)
             }
