@@ -30,8 +30,8 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
                 val quizSet = QuizSetResponse(
                     title = quizSet.title,
                     description = quizSet.description,
-                    shareNum = quizSet.sharedQuizSets.count().toLong(),
-                    viewNum = quizSet.views.count().toLong(),
+                    shareNum = quizSet.sharedQuizSets.count(),
+                    viewNum = quizSet.views.count(),
                     id = quizSet.id!!
                 )
                 quizSets.add(quizSet)
@@ -63,8 +63,8 @@ class QuizSetService (private val quizSetRepository: QuizSetRepository,
                 val myOwnQuizSet = QuizSetResponse(
                     title = ownQuizSet.title,
                     description = ownQuizSet.description,
-                    shareNum = ownQuizSet.sharedQuizSets.count().toLong(),
-                    viewNum = ownQuizSet.views.count().toLong(),
+                    shareNum = ownQuizSet.sharedQuizSets.count(),
+                    viewNum = ownQuizSet.views.count(),
                     id = ownQuizSet.id!!
                 )
                 quizSetsFromMyOwnQuizSets.add(myOwnQuizSet)
