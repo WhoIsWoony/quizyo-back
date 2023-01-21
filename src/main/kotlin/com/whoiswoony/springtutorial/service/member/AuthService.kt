@@ -5,6 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.*
 import com.whoiswoony.springtutorial.dto.*
+import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.member.Util.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
