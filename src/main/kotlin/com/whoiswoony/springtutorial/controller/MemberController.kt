@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-@Tag(name="유저", description = "유저관련 api 입니다")
+@Tag(name="MEMBER API", description = "멤버들의 개인정보를 다루는 API입니다.")
 @RestController
 @RequestMapping("/user/")
 class MemberController(private val authService: AuthService) {

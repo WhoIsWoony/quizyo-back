@@ -9,6 +9,7 @@ import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.member.util.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import javax.servlet.http.HttpServletRequest
 
 @Service
 class AuthService(
@@ -81,22 +82,27 @@ class AuthService(
         }
     }
 
-    fun refreshToken(refreshTokenRequest: RefreshTokenRequest): Token {
-        // refresh token db에서 가져오기
-        val refreshToken = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
-        logger.error(refreshToken?.refreshToken)
-
-        //잘못된 refresh token
+    fun refreshToken(refreshToken: String?): Token {
+        //refreshToken이 null일 시
         refreshToken ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
 
+        val refreshTokenRequest = RefreshTokenRequest(refreshToken)
+
+        // refresh token db에서 가져오기
+        val refreshTokenFound = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
+        logger.error(refreshTokenFound?.refreshToken)
+
+        //refresh token이 db에 존재하지 않을 시
+        refreshTokenFound ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
+
         //token 생성
-        val newAccessToken = jwtUtils.createAccessToken(refreshToken.member.email, refreshToken.member.roles)
+        val newAccessToken = jwtUtils.createAccessToken(refreshTokenFound.member.email, refreshTokenFound.member.roles)
 
         //refresh token 생성
         val newRefreshToken = jwtUtils.createRefreshToken()
 
-        refreshToken.refreshToken = newRefreshToken
-        refreshTokenRepository.save(refreshToken)
+        refreshTokenFound.refreshToken = newRefreshToken
+        refreshTokenRepository.save(refreshTokenFound)
 
         return Token(newAccessToken, newRefreshToken)
     }

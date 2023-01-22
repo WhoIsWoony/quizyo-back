@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.util.*
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 
 @Component
@@ -75,6 +76,39 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
 
         return jwt.compact()
     }
+
+    fun createRefreshTokenCookie(refreshToken:String): Cookie {
+        // create a cookie
+        val cookie = Cookie("refreshToken", refreshToken)
+
+        // expires in 1 day
+        cookie.maxAge = 1 * 24 * 60 * 60
+
+        // optional properties
+        cookie.secure = false
+        cookie.isHttpOnly = true
+        cookie.path = "/"
+
+        return cookie
+    }
+
+
+    fun deleteRefreshTokenCookie(): Cookie {
+        // create a cookie
+        val cookie = Cookie("refreshToken", null)
+
+        cookie.maxAge = 0
+
+        // optional properties
+        cookie.secure = false
+        cookie.isHttpOnly = true
+        cookie.path = "/"
+
+        return cookie
+    }
+
+
+
 
     //Token으로부터 Spring Security의 권한 정보 획득
     fun getAuthentication(token:String):Authentication{

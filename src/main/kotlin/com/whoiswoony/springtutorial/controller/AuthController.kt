@@ -1,5 +1,8 @@
 package com.whoiswoony.springtutorial.controller
 
+import com.whoiswoony.springtutorial.config.security.JwtUtils
+import com.whoiswoony.springtutorial.controller.exception.CustomException
+import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +22,7 @@ import javax.servlet.http.HttpServletResponse
 @Tag(name="AUTH API", description = "유저의 로그인, 회원가입, 중복체크, 토큰관리를 담당하는 API")
 @RestController
 @RequestMapping("/auth/")
-class AuthController(private val authService: AuthService) {
+class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils) {
     @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse {
@@ -27,15 +30,7 @@ class AuthController(private val authService: AuthService) {
         val tokens = authService.login(loginRequest)
 
         // create a cookie
-        val cookie = Cookie("refreshToken", tokens.refreshToken)
-
-        // expires in 1 day
-        cookie.maxAge = 1 * 24 * 60 * 60
-
-        // optional properties
-        cookie.secure = false
-        cookie.isHttpOnly = true
-        cookie.path = "/"
+        val cookie = jwtUtils.createRefreshTokenCookie(tokens.refreshToken)
 
         // add cookie to response
         response.addCookie(cookie)
@@ -66,25 +61,22 @@ class AuthController(private val authService: AuthService) {
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
         val cookies = request.cookies.associate { it.name to it.value }
 
+        lateinit var tokenResponse:TokenResponse
         // refreshToken 추출, request로 변환
-        val refreshTokenRequest = RefreshTokenRequest(cookies["refreshToken"]!!)
-
-        val tokenReissued = authService.refreshToken(refreshTokenRequest)
-
-        // create a cookie
-        val cookie = Cookie("refreshToken", tokenReissued.refreshToken)
-
-        // expires in 1 day
-        cookie.maxAge = 1 * 24 * 60 * 60
-
-        // optional properties
-        cookie.secure = false
-        cookie.isHttpOnly = true
-        cookie.path = "/"
-
-        // add cookie to response
-        response.addCookie(cookie)
-
-        return TokenResponse(tokenReissued.accessToken)
+        try {
+            val tokenReissued = authService.refreshToken(cookies["refreshToken"])
+            val cookie = jwtUtils.createRefreshTokenCookie(tokenReissued.refreshToken)
+            response.addCookie(cookie)
+            tokenResponse = TokenResponse(tokenReissued.accessToken)
+        }catch(e:RuntimeException){
+            when(e){
+                CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN) -> {
+                    val cookie = jwtUtils.deleteRefreshTokenCookie()
+                    response.addCookie(cookie)
+                    tokenResponse = TokenResponse("")
+                }
+            }
+        }
+        return tokenResponse
     }
 }
