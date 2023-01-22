@@ -49,13 +49,13 @@ class AuthService(
         if(!validation.emailValidation(registerRequest.email))
             throw CustomException(ErrorCode.INVALID_EMAIL_FORM)
 
-        //이메일 db 존재시 true, 아닐시 false 반환
-        if(checkDuplicatedEmail(registerRequest.email))
-            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
-
         //비밀번호 형식 확인
         if(!validation.passwordValidation(registerRequest.password))
             throw CustomException(ErrorCode.INVALID_PASSWORD_FORM)
+
+        //이메일 db 존재시 true, 아닐시 false 반환
+        if(checkDuplicatedEmail(registerRequest.email))
+            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
         
         //닉네임 db 존재시 true, 아닐시 false 반환
         if(checkDuplicatedNickname(registerRequest.nickname))
