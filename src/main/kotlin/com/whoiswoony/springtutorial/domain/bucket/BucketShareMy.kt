@@ -1,16 +1,15 @@
-package com.whoiswoony.springtutorial.domain.quizset
+package com.whoiswoony.springtutorial.domain.bucket
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.whoiswoony.springtutorial.domain.member.Member
-import java.util.*
 import javax.persistence.*
 
 @Entity
-class SharedQuizSet(
+class BucketShareMy(
     @JoinColumn(name = "quizSet", unique = true)
     @ManyToOne
     @JsonIgnore
-    val quizSet: QuizSet,
+    val bucket: Bucket,
 
     @JoinColumn(name = "member")
     @ManyToOne

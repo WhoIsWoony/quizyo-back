@@ -1,13 +1,12 @@
-package com.whoiswoony.springtutorial.domain.quizset
+package com.whoiswoony.springtutorial.domain.bucket
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.querydsl.core.annotations.QueryProjection
 import com.whoiswoony.springtutorial.domain.member.Member
-import com.whoiswoony.springtutorial.domain.member.RefreshToken
 import javax.persistence.*
 
 @Entity
-class QuizSet @QueryProjection constructor(
+class Bucket @QueryProjection constructor(
     val title:String,
 
     val description:String,
@@ -17,11 +16,11 @@ class QuizSet @QueryProjection constructor(
     @JsonIgnore
     val member: Member,
 
-    @OneToMany(mappedBy = "quizSet")
-    val views:MutableList<QuizSetView> = mutableListOf(),
+    @OneToMany(mappedBy = "bucket")
+    val views:MutableList<BucketView> = mutableListOf(),
 
-    @OneToMany(mappedBy = "quizSet", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val sharedQuizSets: MutableList<SharedQuizSet> = mutableListOf(),
+    @OneToMany(mappedBy = "bucket", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    val bucketShares: MutableList<BucketShareMy> = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
-package com.whoiswoony.springtutorial.domain.quizset
+package com.whoiswoony.springtutorial.domain.bucket
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface QuizSetRepository : JpaRepository<QuizSet, Long>
+interface BucketRepository : JpaRepository<Bucket, Long>

@@ -3,7 +3,7 @@ package com.whoiswoony.springtutorial
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.member.RefreshTokenRepository
 import com.whoiswoony.springtutorial.service.member.AuthService
-import com.whoiswoony.springtutorial.service.member.Util.Validation
+import com.whoiswoony.springtutorial.service.member.util.Validation
 import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.config.security.UserDetailsService
 import com.whoiswoony.springtutorial.controller.exception.CustomException
@@ -17,7 +17,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import jdk.jfr.BooleanFlag
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.context.annotation.Bean
 import org.springframework.security.crypto.password.NoOpPasswordEncoder

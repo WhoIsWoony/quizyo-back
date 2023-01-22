@@ -53,14 +53,14 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
             .authorizeRequests()
             .antMatchers(
                 "/auth/**",
-                "/quizSet/getQuizSet/**",
-                "/quizSet/addQuizSetView/**",
-                "/quizSet/getRecommendedQuizSet/**"
+                "/bucket/getBucket/**",
+                "/bucket/addBucketView/**",
+                "/bucket/getFindTo10/**"
             ).permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN") //admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
             .antMatchers(
                 "/user/**",
-                "/quizSet/**"
+                "/bucket/**"
             ).hasRole("USER") //user 로 시작하는 요청은 USER 권한이 있는 유저에게만 허용
             .anyRequest().denyAll()
             .and() // JWT 인증 필터 적용

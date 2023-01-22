@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @CrossOrigin(origins = ["*"])
-@Tag(name="유저", description = "유저관련 api 입니다")
+@Tag(name="AUTH API", description = "유저의 로그인, 회원가입, 중복체크, 토큰관리를 담당하는 API")
 @RestController
 @RequestMapping("/auth/")
 class AuthController(private val authService: AuthService) {
-    @Operation(summary = "로그인", description = "로그인입니다.")
+    @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse {
 
@@ -43,25 +43,25 @@ class AuthController(private val authService: AuthService) {
         return TokenResponse(tokens.accessToken)
     }
 
-    @Operation(summary = "회원가입", description = "유저를 생성합니다")
+    @Operation(summary = "회원가입", description = "(email, password, nickname) =>")
     @PostMapping("/register")
     fun register(@RequestBody registerRequest: RegisterRequest){
         return authService.register(registerRequest)
     }
 
-    @Operation(summary = "email 중복 체크", description = "email 중복을 체크합니다.")
+    @Operation(summary = "중복체크 - 이메일", description = "(email) => boolean")
     @GetMapping("/checkDuplicatedEmail/{email}")
     fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
         return authService.checkDuplicatedEmail(email)
     }
 
-    @Operation(summary = "nickname 중복 체크", description = "nickname 중복을 체크합니다.")
+    @Operation(summary = "중복체크 - 닉네임", description = "(nickname) => boolean")
     @GetMapping("/checkDuplicatedNickname/{nickname}")
     fun checkDuplicatedNickname(@PathVariable nickname: String): Boolean {
         return authService.checkDuplicatedNickname(nickname)
     }
 
-    @Operation(summary = "refresh token 재발급", description = "refresh token을 재발급합니다.")
+    @Operation(summary = "토큰재발급", description = "() => accessToken")
     @PostMapping("/refreshToken")
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
         val cookies = request.cookies.associate { it.name to it.value }

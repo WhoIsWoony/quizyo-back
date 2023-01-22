@@ -19,6 +19,6 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     NOT_ALLOWED_TOKEN(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 토큰입니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"JWT 토큰이 잘못되었습니다."),
 
-    //QuizSet error code
-    NOT_FOUND_QUIZ_SET(HttpStatus.BAD_REQUEST,"퀴즈셋을 찾을 수 없습니다.")
+    //Bucket error code
+    NOT_FOUND_BUCKET(HttpStatus.BAD_REQUEST,"버킷을 찾을 수 없습니다.")
 }

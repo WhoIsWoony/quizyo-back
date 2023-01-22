@@ -1,6 +1,5 @@
-package com.whoiswoony.springtutorial.service.member.Util
+package com.whoiswoony.springtutorial.service.member.util
 
-import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import org.springframework.stereotype.Service
 import java.util.regex.Pattern
 
