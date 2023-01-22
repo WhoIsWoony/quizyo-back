@@ -4,6 +4,7 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
+import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -69,13 +70,10 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
             response.addCookie(cookie)
             tokenResponse = TokenResponse(tokenReissued.accessToken)
         }catch(e:RuntimeException){
-            when(e){
-                CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN) -> {
-                    val cookie = jwtUtils.deleteRefreshTokenCookie()
-                    response.addCookie(cookie)
-                    tokenResponse = TokenResponse("")
-                }
-            }
+            logger.error(e.message)
+            val cookie = jwtUtils.deleteRefreshTokenCookie()
+            response.addCookie(cookie)
+            tokenResponse = TokenResponse("")
         }
         return tokenResponse
     }
