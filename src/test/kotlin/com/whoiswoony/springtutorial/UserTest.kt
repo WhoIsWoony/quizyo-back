@@ -15,7 +15,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,13 +33,13 @@ class UserTest:StringSpec ({
     val memberRepository = mockk<MemberRepository>()
     val refreshTokenRepository = mockk<RefreshTokenRepository>()
     val jwtUtils : JwtUtils = JwtUtils(UserDetailsService(memberRepository))
-    val userValidation : Validation = Validation()
-    val userService : AuthService = AuthService(
+    val memberValidation : Validation = Validation()
+    val memberService : AuthService = AuthService(
         memberRepository = memberRepository,
         refreshTokenRepository = refreshTokenRepository,
         passwordEncoder = passwordEncoder(),
         jwtUtils = jwtUtils,
-        validation = userValidation
+        validation = memberValidation
     )
 
     "이메일 형식 오류"{
@@ -52,7 +51,7 @@ class UserTest:StringSpec ({
 
         //when
         val exception = shouldThrow<RuntimeException> {
-            userService.register(registerRequest)
+            memberService.register(registerRequest)
         }
 
         //then
@@ -68,7 +67,7 @@ class UserTest:StringSpec ({
         every { memberRepository.findByEmail(email) } returns Member(email, password, "test")
 
         //when
-        val exception = shouldThrow<RuntimeException> { userService.login(loginRequest) }
+        val exception = shouldThrow<RuntimeException> { memberService.login(loginRequest) }
 
         //then
         exception shouldBe CustomException(ErrorCode.NOT_EXIST_EMAIL)
