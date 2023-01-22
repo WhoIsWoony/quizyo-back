@@ -23,7 +23,7 @@ class BucketController(private val bucketService: BucketService, private val buc
         bucketService.addBucket(memberEmail, addBucketRequest)
     }
 
-    @Operation(summary = "버킷 전체 조회", description = "() =>")
+    @Operation(summary = "버킷 전체 가져오기", description = "() =>")
     @GetMapping("/getBucket")
     fun getBucket(): MutableList<BucketResponse> {
         return bucketService.getBucket()
@@ -52,9 +52,9 @@ class BucketController(private val bucketService: BucketService, private val buc
         return BucketMyResponse(myBuckets, myBucketShares)
     }
 
-    @Operation(summary = "버킷 조회순 TOP10 불러오기", description = "()=>[BucketResponse]")
-    @GetMapping("/getFindTo10")
-    fun getFindTo10(): MutableList<BucketResponse> {
+    @Operation(summary = "버킷 조회순 TOP10 가져오기", description = "()=>[BucketResponse]")
+    @GetMapping("/getFindTop10")
+    fun getFindTop10(): BucketTop10Response {
         return bucketService.getFindTop10()
     }
 }

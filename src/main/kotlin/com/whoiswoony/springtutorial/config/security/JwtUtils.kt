@@ -128,7 +128,9 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
     fun resolveToken(request: HttpServletRequest): String? {
         //bearerToken 포함여부 체크
         val bearerToken = request.getHeader("Authorization")
+
         bearerToken ?: return null
+        if(bearerToken.length < "BEARER ".length) return null
 
         //Beaer 포함여부 체크
         val checkBearer = bearerToken.substring(0, "BEARER ".length)

@@ -5,6 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.bucket.*
 import com.whoiswoony.springtutorial.dto.AddBucketRequest
+import com.whoiswoony.springtutorial.dto.BucketTop10Response
 import com.whoiswoony.springtutorial.dto.BucketResponse
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -40,8 +41,9 @@ class BucketService (private val bucketRepository: BucketRepository,
     }
 
 
-    fun getFindTop10(): MutableList<BucketResponse> {
-        return bucketRepositorySupport.findTop10()
+    fun getFindTop10(): BucketTop10Response {
+        val buckets = bucketRepositorySupport.findTop10()
+        return BucketTop10Response(buckets)
     }
 
     fun addBucketView(bucketId:Long, ipAddress:String){
