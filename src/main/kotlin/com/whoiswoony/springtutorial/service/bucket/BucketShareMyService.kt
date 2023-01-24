@@ -23,6 +23,10 @@ class BucketShareMyService (
         //Bucket set 존재 X시, 오류 발생
         bucket ?: throw CustomException(ErrorCode.NOT_FOUND_BUCKET)
 
+        //자신이 생성한 버킷은 퍼오기 불가능
+        if(bucket.member.email == memberEmail)
+            throw CustomException(ErrorCode.INVALID_BUCKET_SHARE)
+
         val bucketShareMy = BucketShareMy(bucket, member)
 
         bucketShareMyRepository.save(bucketShareMy)
