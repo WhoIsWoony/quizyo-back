@@ -2,6 +2,9 @@ package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.dto.*
+import com.whoiswoony.springtutorial.dto.member.LoginRequest
+import com.whoiswoony.springtutorial.dto.member.RegisterRequest
+import com.whoiswoony.springtutorial.dto.member.TokenResponse
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -56,7 +59,7 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @Operation(summary = "토큰재발급", description = "() => accessToken")
     @PostMapping("/refreshToken")
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
-        lateinit var tokenResponse:TokenResponse
+        lateinit var tokenResponse: TokenResponse
         try {
             // refreshToken 추출, request로 변환
             val cookies = request.cookies.associate { it.name to it.value }

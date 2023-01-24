@@ -4,11 +4,10 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.bucket.BucketRepository
-import com.whoiswoony.springtutorial.domain.bucket.BucketViewRepository
 import com.whoiswoony.springtutorial.domain.bucket.BucketShareMy
 import com.whoiswoony.springtutorial.domain.bucket.BucketShareMyRepository
-import com.whoiswoony.springtutorial.dto.AddBucketShareMyRequest
-import com.whoiswoony.springtutorial.dto.BucketResponse
+import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
+import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import org.springframework.stereotype.Service
 
 @Service

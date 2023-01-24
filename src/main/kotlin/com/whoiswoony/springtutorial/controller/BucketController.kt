@@ -2,9 +2,7 @@ package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
 import com.whoiswoony.springtutorial.dto.*
-import com.whoiswoony.springtutorial.dto.AddBucketRequest
-import com.whoiswoony.springtutorial.dto.BucketResponse
-import com.whoiswoony.springtutorial.dto.AddBucketShareMyRequest
+import com.whoiswoony.springtutorial.dto.bucket.*
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.swagger.v3.oas.annotations.Operation

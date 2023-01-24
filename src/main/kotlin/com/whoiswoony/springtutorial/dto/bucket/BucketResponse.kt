@@ -1,4 +1,4 @@
-package com.whoiswoony.springtutorial.dto
+package com.whoiswoony.springtutorial.dto.bucket
 
 import com.querydsl.core.annotations.QueryProjection
 

@@ -2,7 +2,7 @@ package com.whoiswoony.springtutorial.domain.bucket
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.whoiswoony.springtutorial.domain.bucket.QBucketView.bucketView
-import com.whoiswoony.springtutorial.dto.BucketResponse
+import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.stereotype.Repository
 
@@ -24,6 +24,7 @@ class BucketRepositorySupport(private val jpaQueryFactory:JPAQueryFactory):Query
                 it.bucket.bucketShares.size ,
                 it.bucket.views.size,
                 it.bucket.id
-            )}.toMutableList()
+            )
+        }.toMutableList()
     }
 }

@@ -9,8 +9,8 @@ import com.whoiswoony.springtutorial.config.security.UserDetailsService
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.Member
-import com.whoiswoony.springtutorial.dto.LoginRequest
-import com.whoiswoony.springtutorial.dto.RegisterRequest
+import com.whoiswoony.springtutorial.dto.member.LoginRequest
+import com.whoiswoony.springtutorial.dto.member.RegisterRequest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

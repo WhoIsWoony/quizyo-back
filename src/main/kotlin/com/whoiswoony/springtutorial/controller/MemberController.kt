@@ -1,19 +1,11 @@
 package com.whoiswoony.springtutorial.controller
 
-import com.whoiswoony.springtutorial.dto.RefreshTokenRequest
-import com.whoiswoony.springtutorial.dto.TokenResponse
-import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.lang.IllegalArgumentException
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 @Tag(name="MEMBER API", description = "멤버들의 개인정보를 다루는 API입니다.")
 @RestController

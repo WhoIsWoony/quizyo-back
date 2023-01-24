@@ -4,9 +4,9 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.bucket.*
-import com.whoiswoony.springtutorial.dto.AddBucketRequest
-import com.whoiswoony.springtutorial.dto.BucketTop10Response
-import com.whoiswoony.springtutorial.dto.BucketResponse
+import com.whoiswoony.springtutorial.dto.bucket.AddBucketRequest
+import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
+import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
