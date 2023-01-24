@@ -6,12 +6,12 @@ import javax.persistence.*
 
 @Entity
 class BucketShareMy(
-    @JoinColumn(name = "quizSet", unique = true)
+    @JoinColumn(name = "bucketShares", unique = true)
     @ManyToOne
     @JsonIgnore
     val bucket: Bucket,
 
-    @JoinColumn(name = "member")
+    @JoinColumn
     @ManyToOne
     @JsonIgnore
     val member: Member,

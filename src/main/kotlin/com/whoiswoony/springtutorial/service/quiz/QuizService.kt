@@ -5,10 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.bucket.BucketRepository
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import com.whoiswoony.springtutorial.domain.quiz.QuizRepository
-import com.whoiswoony.springtutorial.dto.quiz.AddQuizRequest
-import com.whoiswoony.springtutorial.dto.quiz.ChangeQuizOrder
-import com.whoiswoony.springtutorial.dto.quiz.DeleteQuizRequest
-import com.whoiswoony.springtutorial.dto.quiz.UpdateQuizRequest
+import com.whoiswoony.springtutorial.dto.quiz.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -18,7 +15,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
         val bucket = bucketRepository.findByIdOrNull(addQuizRequest.bucketId)
         bucket ?: throw CustomException(ErrorCode.NOT_FOUND_BUCKET)
 
-        val quiz = Quiz(addQuizRequest.question, addQuizRequest.answer, addQuizRequest.order, bucket)
+        val quiz = Quiz(addQuizRequest.question, addQuizRequest.answer, addQuizRequest.sequence, bucket)
         quizRepository.save(quiz)
     }
 
@@ -30,7 +27,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
         val quiz = quizRepository.findByIdOrNull(changeQuizOrder.quizId)
         quiz ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ)
 
-        quiz.order = changeQuizOrder.order
+        quiz.sequence = changeQuizOrder.sequence
         quizRepository.save(quiz)
     }
 
@@ -41,8 +38,14 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
 
         quiz.question = updateQuizRequest.question
         quiz.answer = updateQuizRequest.answer
-        quiz.order = updateQuizRequest.order
+        quiz.sequence = updateQuizRequest.sequence
 
         quizRepository.save(quiz)
+    }
+
+    fun getQuiz(bucketId:Long): GetQuizResponse {
+        val quiz = quizRepository.findByBucketId(bucketId)
+        val response = quiz.map{QuizResponse(it.id!!, it.question, it.answer)}.toMutableList()
+        return GetQuizResponse(response)
     }
 }

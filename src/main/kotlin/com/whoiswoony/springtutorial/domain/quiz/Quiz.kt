@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.domain.quiz
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.whoiswoony.springtutorial.domain.bucket.Bucket
 import com.whoiswoony.springtutorial.domain.bucket.BucketShareMy
 import javax.persistence.*
@@ -10,9 +11,12 @@ class Quiz(
 
     var answer: String,
 
-    var order: Long,
+    var sequence: Long,
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+
+    @JoinColumn
+    @ManyToOne
+    @JsonIgnore
     var bucket: Bucket,
 
     @Id
