@@ -10,7 +10,6 @@ import com.whoiswoony.springtutorial.domain.bucket.BucketShareMyRepository
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
 import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import org.springframework.stereotype.Service
-import javax.swing.text.StyledEditorKit.BoldAction
 
 @Service
 class BucketShareMyService (

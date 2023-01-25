@@ -2,14 +2,16 @@ package com.whoiswoony.springtutorial.service.bucket
 
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
-import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.bucket.*
+import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketRequest
-import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
 import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
+import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
 import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Service
 class BucketService (private val bucketRepository: BucketRepository,
@@ -56,6 +58,9 @@ class BucketService (private val bucketRepository: BucketRepository,
         if(!validation.ipAddressValidation(ipAddress))
             throw CustomException(ErrorCode.INVALID_IPADDRESS_FORM)
 
+        if(!checkBucketViewTimeConstraint(bucket.views, ipAddress))
+            throw CustomException(ErrorCode.INVALID_BUCKET_VIEW_UPDATE_TIME)
+
         val bucketView = BucketView(bucket, ipAddress)
         bucketViewRepository.save(bucketView)
     }
@@ -76,5 +81,17 @@ class BucketService (private val bucketRepository: BucketRepository,
             result.add(bucketResponse)
         }
         return result
+    }
+
+    fun checkBucketViewTimeConstraint(bucketViewList: MutableList<BucketView>, ipAddress: String): Boolean {
+        val date = LocalDate.now() //오늘 날짜 LocalDate 객체 생성
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val today = date.format(dateTimeFormatter)
+
+        for (bucketView in bucketViewList)
+            if(today == bucketView.createdDate.toString() && bucketView.ipAddress == ipAddress)
+                return false
+
+        return true
     }
 }
