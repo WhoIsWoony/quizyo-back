@@ -23,6 +23,7 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     NOT_FOUND_BUCKET(HttpStatus.BAD_REQUEST,"버킷을 찾을 수 없습니다."),
     INVALID_BUCKET_SHARE(HttpStatus.BAD_REQUEST, "자신이 생성한 버킷은 퍼올 수 없습니다."),
     DUPLICATE_BUCKET_SHARE_MY(HttpStatus.BAD_REQUEST, "이미 퍼온 버킷은 다시 퍼올 수 없습니다."),
+    INVALID_IPADDRESS_FORM(HttpStatus.BAD_REQUEST, "잘못된 IP 주소 형식입니다."),
 
     //Quiz error code
     NOT_FOUND_QUIZ(HttpStatus.BAD_REQUEST,"퀴즈를 찾을 수 없습니다.")
