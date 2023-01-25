@@ -10,8 +10,8 @@ import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
 import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import java.sql.Date
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Service
 class BucketService (private val bucketRepository: BucketRepository,
@@ -84,12 +84,10 @@ class BucketService (private val bucketRepository: BucketRepository,
     }
 
     fun checkBucketViewTimeConstraint(bucketViewList: MutableList<BucketView>, ipAddress: String): Boolean {
-        val date = LocalDate.now() //오늘 날짜 LocalDate 객체 생성
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val today = date.format(dateTimeFormatter)
+        val date = Date.valueOf(LocalDate.now())
 
         for (bucketView in bucketViewList)
-            if(today == bucketView.createdDate.toString() && bucketView.ipAddress == ipAddress)
+            if(date == bucketView.createdDate && bucketView.ipAddress == ipAddress)
                 return false
 
         return true

@@ -18,6 +18,11 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
+import java.sql.Date
+import java.sql.Time
+import java.time.LocalDate
+import java.time.LocalTime
+import java.util.*
 
 @ExtendWith(MockKExtension::class)
 class BucketTest :StringSpec({
@@ -80,6 +85,40 @@ class BucketTest :StringSpec({
 
         //then
         exception shouldBe CustomException(ErrorCode.INVALID_IPADDRESS_FORM)
+    }
+
+    "24시간 이내 조회한 버킷 조회수 업데이트 불가"{
+        //given
+        val ipAddress = "0.0.0.0"
+
+        val email = "test@test.com"
+        val password = "test123!"
+        val nickname = "test"
+        val member = Member(email, password, nickname)
+
+        val bucketId : Long = 1
+        val bucketTitle = "test"
+        val bucketDescription = "INVALID_IPADDRESS_FORM"
+        val bucketViews = mutableListOf<BucketView>()
+        val bucketShares = mutableListOf<BucketShareMy>()
+        val bucketQuizs = mutableListOf<Quiz>()
+        val bucket = Bucket(bucketTitle, bucketDescription, member, bucketViews, bucketShares, bucketQuizs, bucketId)
+
+        val updatedBucketView = mutableListOf<BucketView>()
+        val date = Date.valueOf(LocalDate.now())
+        val time = Time.valueOf(LocalTime.now())
+        updatedBucketView.add(BucketView(bucket, ipAddress, date , time , bucketId))
+
+        val updatedBucket = Bucket(bucketTitle, bucketDescription, member, updatedBucketView, bucketShares, bucketQuizs, bucketId)
+
+        every { bucketRepository.findByIdOrNull(bucketId) } returns updatedBucket
+        every { validation.ipAddressValidation(any()) } returns true
+
+        //when
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, ipAddress) }
+
+        //then
+        exception shouldBe CustomException(ErrorCode.INVALID_BUCKET_VIEW_UPDATE_TIME)
     }
 
     "이미 퍼온 버킷 다시 퍼오기 불가"{
