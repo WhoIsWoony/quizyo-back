@@ -3,7 +3,6 @@ package com.whoiswoony.springtutorial
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.member.RefreshTokenRepository
 import com.whoiswoony.springtutorial.service.member.AuthService
-import com.whoiswoony.springtutorial.service.member.util.*
 import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.config.security.UserDetailsService
 import com.whoiswoony.springtutorial.controller.exception.CustomException
@@ -11,6 +10,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.dto.member.LoginRequest
 import com.whoiswoony.springtutorial.dto.member.RegisterRequest
+import com.whoiswoony.springtutorial.service.Validation
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe

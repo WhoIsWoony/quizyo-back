@@ -9,7 +9,7 @@ import com.whoiswoony.springtutorial.dto.member.RefreshTokenRequest
 import com.whoiswoony.springtutorial.dto.member.RegisterRequest
 import com.whoiswoony.springtutorial.dto.member.Token
 import com.whoiswoony.springtutorial.logger
-import com.whoiswoony.springtutorial.service.member.util.Validation
+import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 

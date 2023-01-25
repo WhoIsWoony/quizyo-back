@@ -6,8 +6,8 @@ import com.whoiswoony.springtutorial.domain.bucket.*
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
-import com.whoiswoony.springtutorial.service.member.util.*
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
+import com.whoiswoony.springtutorial.service.Validation
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.kotest.assertions.throwables.shouldThrow
@@ -17,6 +17,7 @@ import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.repository.findByIdOrNull
 
 @ExtendWith(MockKExtension::class)
 class BucketTest :StringSpec({
@@ -25,12 +26,14 @@ class BucketTest :StringSpec({
     val bucketViewRepository = mockk<BucketViewRepository>()
     val bucketRepositorySupport = mockk<BucketRepositorySupport>()
     val bucketShareMyRepository = mockk<BucketShareMyRepository>()
+    val validation = mockk<Validation>()
 
     val bucketService = BucketService(
         memberRepository = memberRepository,
         bucketRepository = bucketRepository,
         bucketRepositorySupport = bucketRepositorySupport,
-        bucketViewRepository = bucketViewRepository
+        bucketViewRepository = bucketViewRepository,
+        validation = validation
     )
     val bucketShareMyService = BucketShareMyService(
         memberRepository = memberRepository,
@@ -38,7 +41,48 @@ class BucketTest :StringSpec({
         bucketRepository = bucketRepository
     )
 
-/*    "이미 퍼온 버킷 다시 퍼오기 불가"{
+    "없는 퀴즈셋 조회 불가능"{
+        //given
+        val ipAddress = "0.0.0.0"
+        val bucketId : Long = 1
+
+        every { bucketRepository.findByIdOrNull(bucketId) } returns null
+
+        //when
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, ipAddress) }
+
+        //then
+        exception shouldBe CustomException(ErrorCode.NOT_FOUND_BUCKET)
+    }
+
+    "IP 주소 형식 오류"{
+        //given
+        val wrongIpAddress = "0.0.0."
+
+        val email = "test@test.com"
+        val password = "test123!"
+        val nickname = "test"
+        val member = Member(email, password, nickname)
+
+        val bucketId : Long = 1
+        val bucketTitle = "test"
+        val bucketDescription = "INVALID_IPADDRESS_FORM"
+        val bucketViews = mutableListOf<BucketView>()
+        val bucketShares = mutableListOf<BucketShareMy>()
+        val bucketQuizs = mutableListOf<Quiz>()
+        val bucket = Bucket(bucketTitle, bucketDescription, member, bucketViews, bucketShares, bucketQuizs, bucketId)
+
+        every { bucketRepository.findByIdOrNull(bucketId) } returns bucket
+        every { validation.ipAddressValidation(any()) } returns false
+
+        //when
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, wrongIpAddress) }
+
+        //then
+        exception shouldBe CustomException(ErrorCode.INVALID_IPADDRESS_FORM)
+    }
+
+    "이미 퍼온 버킷 다시 퍼오기 불가"{
         //given
         val bucketMakerEmail = "maker@maker.com"
         val bucketMakerPassword = "maker123!"
@@ -55,24 +99,21 @@ class BucketTest :StringSpec({
         val bucketDescription = "INVALID_SHARE_BUCKET TEST"
         val bucketViews = mutableListOf<BucketView>()
         val bucketShares = mutableListOf<BucketShareMy>()
-        val bucket = Bucket(bucketTitle, bucketDescription, bucketMaker, bucketViews, bucketShares, bucketId)
+        val bucketQuizs = mutableListOf<Quiz>()
+        val bucket = Bucket(bucketTitle, bucketDescription, bucketMaker, bucketViews, bucketShares, bucketQuizs, bucketId)
 
         val addBucketShareMyRequest = AddBucketShareMyRequest(bucketId)
-
-        bucketShares.add(BucketShareMy(bucket, bucketSharer))
-        val duplicateBucket = Bucket(bucketTitle, bucketDescription, bucketMaker, bucketViews, bucketShares, bucketId)
-
+        bucketSharer.bucketShares.add(BucketShareMy(bucket, bucketSharer))
 
         every { memberRepository.findByEmail(any()) } returns bucketSharer
-        every { bucketRepository.findById(any()).orElse(null) } returns duplicateBucket
-        every { bucketShareMyService.checkDuplicateBucketShareMy(bucketShares, BucketShareMy(duplicateBucket, bucketSharer)) } returns true
+        every { bucketRepository.findById(any()).orElse(null) } returns bucket
 
         //when
         val exception = shouldThrow<RuntimeException> { bucketShareMyService.addBucketShareMy(bucketSharerEmail, addBucketShareMyRequest) }
 
         //then
         exception shouldBe CustomException(ErrorCode.DUPLICATE_BUCKET_SHARE_MY)
-    }*/
+    }
     
     "존재하지 않는 Bucket 퍼오기 불가"{
         //given
