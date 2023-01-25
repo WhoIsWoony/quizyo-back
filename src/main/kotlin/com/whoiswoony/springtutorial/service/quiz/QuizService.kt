@@ -20,7 +20,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
     }
 
     fun deleteQuiz(deleteQuizRequest: DeleteQuizRequest){
-        quizRepository.deleteById(deleteQuizRequest.quizId)
+        quizRepository.deleteById(deleteQuizRequest.id)
     }
 
     fun changeQuizOrder(changeQuizOrder: ChangeQuizOrder){
@@ -33,7 +33,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
 
 
     fun updateQuiz(updateQuizRequest: UpdateQuizRequest){
-        val quiz = quizRepository.findByIdOrNull(updateQuizRequest.quizId)
+        val quiz = quizRepository.findByIdOrNull(updateQuizRequest.id)
         quiz ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ)
 
         quiz.question = updateQuizRequest.question
@@ -45,7 +45,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
 
     fun getQuiz(bucketId:Long): GetQuizResponse {
         val quiz = quizRepository.findByBucketId(bucketId)
-        val response = quiz.map{QuizResponse(it.id!!, it.question, it.answer)}.toMutableList()
+        val response = quiz.map{QuizDto(it.id!!, it.question, it.answer, it.sequence)}.toMutableList()
         return GetQuizResponse(response)
     }
 }

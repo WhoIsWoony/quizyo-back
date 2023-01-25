@@ -1,8 +1,7 @@
 package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
-import com.whoiswoony.springtutorial.dto.quiz.AddQuizRequest
-import com.whoiswoony.springtutorial.dto.quiz.GetQuizResponse
+import com.whoiswoony.springtutorial.dto.quiz.*
 import com.whoiswoony.springtutorial.service.quiz.QuizService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -22,6 +21,18 @@ class QuizController(private val quizService: QuizService) {
     @GetMapping("/getQuiz/{bucketId}")
     fun getQuiz(@PathVariable bucketId:Long): GetQuizResponse {
         return quizService.getQuiz(bucketId)
+    }
+
+    @Operation(summary = "퀴즈업데이트", description = "() =>")
+    @PostMapping("/updateQuiz")
+    fun updateQuiz(@RequestBody updateQuizRequest: UpdateQuizRequest) {
+        quizService.updateQuiz(updateQuizRequest)
+    }
+
+    @Operation(summary = "퀴즈삭제", description = "() =>")
+    @PostMapping("/deleteQuiz")
+    fun updateQuiz(@RequestBody deleteQuizRequest: DeleteQuizRequest) {
+        quizService.deleteQuiz(deleteQuizRequest)
     }
 
 }
