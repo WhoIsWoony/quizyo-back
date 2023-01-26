@@ -45,6 +45,21 @@ class BucketService (private val bucketRepository: BucketRepository,
     }
 
 
+    fun getOneBucket(bucketId:Long): BucketResponse {
+        val bucket = bucketRepository.findByIdOrNull(bucketId)
+
+        bucket?:throw CustomException(ErrorCode.NOT_FOUND_BUCKET)
+
+        return BucketResponse(
+            bucket.title,
+            bucket.description,
+            bucket.bucketShares.count(),
+            bucket.views.count(),
+            bucket.id!!
+        )
+    }
+
+
     fun getFindTop10(): BucketTop10Response {
         val buckets = bucketRepositorySupport.findTop10()
         return BucketTop10Response(buckets)

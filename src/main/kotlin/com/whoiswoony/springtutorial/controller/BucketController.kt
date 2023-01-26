@@ -27,6 +27,12 @@ class BucketController(private val bucketService: BucketService, private val buc
         return bucketService.getBucket()
     }
 
+    @Operation(summary = "버킷 한개 가져오기", description = "(bucketId) =>")
+    @GetMapping("/getOneBucket/{bucketId}")
+    fun getOneBucket(@PathVariable bucketId:Long): BucketResponse {
+        return bucketService.getOneBucket(bucketId)
+    }
+
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
     @GetMapping("/addBucketView/{bucketId}/{ipAddress}")
     fun addBucketView(@PathVariable bucketId:Long, @PathVariable ipAddress:String) {
