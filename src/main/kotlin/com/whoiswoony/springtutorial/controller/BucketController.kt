@@ -1,13 +1,16 @@
 package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
+import com.whoiswoony.springtutorial.controller.util.getIp
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.bucket.*
+import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
 
 @Tag(name="BUCKET API", description = "버킷은 퀴즈들을 담고 있는 그룹입니다. 버킷의 생성, 조회, 공유를 관리하는 API입니다.")
 @RestController
@@ -34,8 +37,10 @@ class BucketController(private val bucketService: BucketService, private val buc
     }
 
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
-    @GetMapping("/addBucketView/{bucketId}/{ipAddress}")
-    fun addBucketView(@PathVariable bucketId:Long, @PathVariable ipAddress:String) {
+    @GetMapping("/addBucketView/{bucketId}")
+    fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest) {
+        val ipAddress = getIp(request)
+        logger.error { ipAddress }
         bucketService.addBucketView(bucketId, ipAddress)
     }
 

@@ -6,6 +6,7 @@ import com.whoiswoony.springtutorial.domain.bucket.BucketRepository
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import com.whoiswoony.springtutorial.domain.quiz.QuizRepository
 import com.whoiswoony.springtutorial.dto.quiz.*
+import com.whoiswoony.springtutorial.logger
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
