@@ -1,7 +1,7 @@
 package com.whoiswoony.springtutorial.domain.member
 
-import com.whoiswoony.springtutorial.domain.quizset.QuizSet
-import com.whoiswoony.springtutorial.domain.quizset.SharedQuizSet
+import com.whoiswoony.springtutorial.domain.bucket.Bucket
+import com.whoiswoony.springtutorial.domain.bucket.BucketShareMy
 import javax.persistence.*
 
 @Entity
@@ -21,10 +21,10 @@ class Member(
     val refreshTokens: MutableList<RefreshToken> = arrayListOf(),
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val quizSets: MutableList<QuizSet> = arrayListOf(),
+    val buckets: MutableList<Bucket> = arrayListOf(),
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    val sharedQuizSets: MutableList<SharedQuizSet> = mutableListOf(),
+    val bucketShares: MutableList<BucketShareMy> = mutableListOf(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

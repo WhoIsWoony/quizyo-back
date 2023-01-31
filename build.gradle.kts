@@ -5,14 +5,14 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.15.RELEASE"
 	id("org.springdoc.openapi-gradle-plugin") version "1.5.0"	//Swagger
 
-	kotlin("jvm") version "1.6.21"
-	kotlin("kapt") version "1.6.21"
-	kotlin("plugin.spring") version "1.6.21"
+	kotlin("jvm") version "1.7.10"
+	kotlin("kapt") version "1.7.10"
+	kotlin("plugin.spring") version "1.7.10"
 
-	kotlin("plugin.jpa") version "1.6.21" //JPA
-	kotlin("plugin.allopen") version "1.6.21" // allOpen에서 지정한 어노테이션으로 만든 클래스에 open 키워드 적용
+	kotlin("plugin.jpa") version "1.7.10" //JPA
+	kotlin("plugin.allopen") version "1.7.10" // allOpen에서 지정한 어노테이션으로 만든 클래스에 open 키워드 적용
 	// - Hibernate가 사용하는 Reflection API에서 Entity를 만들기 위해 인자 없는 기본 생성자가 필요함
-	kotlin("plugin.noarg") version "1.6.21" // 인자 없는 기본 생성자를 자동 생성
+	kotlin("plugin.noarg") version "1.7.10" // 인자 없는 기본 생성자를 자동 생성
 
 }
 

@@ -14,8 +14,8 @@ class SwaggerConfig {
     fun openAPI(): OpenAPI? {
         val info = Info()
             .version("v1.0.0")
-            .title("API 타이틀")
-            .description("API Description")
+            .title("QuizYo 백엔드 API")
+            .description("QuizYo와 함께하는 백엔드 프로젝트햐")
 
         // SecuritySecheme명
         val jwtSchemeName = "jwtAuth"

@@ -4,8 +4,12 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.*
-import com.whoiswoony.springtutorial.dto.*
-import com.whoiswoony.springtutorial.service.member.Util.Validation
+import com.whoiswoony.springtutorial.dto.member.LoginRequest
+import com.whoiswoony.springtutorial.dto.member.RefreshTokenRequest
+import com.whoiswoony.springtutorial.dto.member.RegisterRequest
+import com.whoiswoony.springtutorial.dto.member.Token
+import com.whoiswoony.springtutorial.logger
+import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -48,13 +52,13 @@ class AuthService(
         if(!validation.emailValidation(registerRequest.email))
             throw CustomException(ErrorCode.INVALID_EMAIL_FORM)
 
-        //이메일 db 존재시 true, 아닐시 false 반환
-        if(checkDuplicatedEmail(registerRequest.email))
-            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
-
         //비밀번호 형식 확인
         if(!validation.passwordValidation(registerRequest.password))
             throw CustomException(ErrorCode.INVALID_PASSWORD_FORM)
+
+        //이메일 db 존재시 true, 아닐시 false 반환
+        if(checkDuplicatedEmail(registerRequest.email))
+            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
         
         //닉네임 db 존재시 true, 아닐시 false 반환
         if(checkDuplicatedNickname(registerRequest.nickname))
@@ -80,28 +84,28 @@ class AuthService(
         }
     }
 
-    fun refreshToken(refreshTokenRequest: RefreshTokenRequest): Token {
+    fun refreshToken(refreshToken: String?): Token {
+        //refreshToken이 null일 시
+        refreshToken ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
+
+        val refreshTokenRequest = RefreshTokenRequest(refreshToken)
+
         // refresh token db에서 가져오기
-        val refreshToken = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
+        val refreshTokenFound = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
+        logger.error(refreshTokenFound?.refreshToken)
 
-        //잘못된 refresh token
-        refreshToken?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
-
-        val member = refreshToken.member
+        //refresh token이 db에 존재하지 않을 시
+        refreshTokenFound ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
 
         //token 생성
-        val newAccessToken = jwtUtils.createAccessToken(member.email, member.roles)
+        val newAccessToken = jwtUtils.createAccessToken(refreshTokenFound.member.email, refreshTokenFound.member.roles)
 
         //refresh token 생성
         val newRefreshToken = jwtUtils.createRefreshToken()
 
-        val refreshTokenEntity = RefreshToken(
-                member,
-                newRefreshToken
-        )
+        refreshTokenFound.refreshToken = newRefreshToken
+        refreshTokenRepository.save(refreshTokenFound)
 
-        refreshTokenRepository.delete(refreshToken)
-        refreshTokenRepository.save(refreshTokenEntity)
         return Token(newAccessToken, newRefreshToken)
     }
 

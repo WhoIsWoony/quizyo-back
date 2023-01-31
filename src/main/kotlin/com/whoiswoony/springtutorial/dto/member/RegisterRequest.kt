@@ -1,4 +1,4 @@
-package com.whoiswoony.springtutorial.dto
+package com.whoiswoony.springtutorial.dto.member
 
 data class RegisterRequest(
     val email:String,
