@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.Date
 import javax.persistence.*
 
-@Entity
+@Entity(name="BUCKET_VIEW")
 @Table(uniqueConstraints = [UniqueConstraint(columnNames =  ["BUCKET_ID", "ipAddress", "createdDate"])])
 class BucketView (
     @JsonIgnore

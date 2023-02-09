@@ -6,7 +6,7 @@ import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import javax.persistence.*
 
-@Entity
+@Entity(name="BUCKET")
 class Bucket @QueryProjection constructor(
     val title:String,
 

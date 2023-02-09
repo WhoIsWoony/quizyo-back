@@ -8,7 +8,7 @@ import org.springframework.boot.runApplication
 class SpringTutorialApplication
 
 val logger = KotlinLogging.logger{}
-const val TEST_URL = "http://localhost:8080"
+const val TEST_URL = "http://localhost:4000"
 
 fun main(args: Array<String>) {
 	logger.info ("H2 DB : $TEST_URL/h2-console")

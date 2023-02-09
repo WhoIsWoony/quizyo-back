@@ -4,7 +4,7 @@ import com.whoiswoony.springtutorial.domain.bucket.Bucket
 import com.whoiswoony.springtutorial.domain.bucket.BucketShareMy
 import javax.persistence.*
 
-@Entity
+@Entity(name="MEMBER")
 class Member(
     @Column(unique = true)
     val email: String,

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.whoiswoony.springtutorial.domain.member.Member
 import javax.persistence.*
 
-@Entity
+@Entity(name="BUCKET_SHARE_MY")
 class BucketShareMy(
     @JoinColumn(name = "bucketShares", unique = true)
     @ManyToOne

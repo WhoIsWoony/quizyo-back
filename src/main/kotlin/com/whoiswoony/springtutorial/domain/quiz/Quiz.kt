@@ -5,7 +5,7 @@ import com.whoiswoony.springtutorial.domain.bucket.Bucket
 import com.whoiswoony.springtutorial.domain.bucket.BucketShareMy
 import javax.persistence.*
 
-@Entity
+@Entity(name="QUIZ")
 class Quiz(
     var question: String,
 

@@ -3,7 +3,7 @@ package com.whoiswoony.springtutorial.domain.member
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*;
 
-@Entity
+@Entity(name="REFRESH_TOKEN")
 class RefreshToken(
 
         @JoinColumn(name = "member")
