@@ -1,16 +1,16 @@
-package com.whoiswoony.springtutorial.domain.quizset
+package com.whoiswoony.springtutorial.domain.bucket
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.Date
 import javax.persistence.*
 
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames =  ["QUIZSET_ID", "ipAddress", "createdDate"])])
-class QuizSetView (
+@Table(uniqueConstraints = [UniqueConstraint(columnNames =  ["BUCKET_ID", "ipAddress", "createdDate"])])
+class BucketView (
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "QUIZSET_ID")
-    val quizSet:QuizSet,
+    @JoinColumn(name = "BUCKET_ID")
+    val bucket:Bucket,
 
     val ipAddress:String,
 

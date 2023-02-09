@@ -1,6 +1,10 @@
 package com.whoiswoony.springtutorial.controller
 
+import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.dto.*
+import com.whoiswoony.springtutorial.dto.member.LoginRequest
+import com.whoiswoony.springtutorial.dto.member.RegisterRequest
+import com.whoiswoony.springtutorial.dto.member.TokenResponse
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -10,33 +14,23 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.validation.constraints.Email
 
 @CrossOrigin(origins = ["*"])
-@Tag(name="유저", description = "유저관련 api 입니다")
+@Tag(name="AUTH API", description = "유저의 로그인, 회원가입, 중복체크, 토큰관리를 담당하는 API")
 @RestController
 @RequestMapping("/auth/")
-class AuthController(private val authService: AuthService) {
-    @Operation(summary = "로그인", description = "로그인입니다.")
+class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils) {
+    @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse {
 
         val tokens = authService.login(loginRequest)
 
         // create a cookie
-        val cookie = Cookie("refreshToken", tokens.refreshToken)
-
-        // expires in 1 day
-        cookie.maxAge = 1 * 24 * 60 * 60
-
-        // optional properties
-        cookie.secure = false
-        cookie.isHttpOnly = false
-        cookie.path = "/"
+        val cookie = jwtUtils.createRefreshTokenCookie(tokens.refreshToken)
 
         // add cookie to response
         response.addCookie(cookie)
@@ -44,21 +38,40 @@ class AuthController(private val authService: AuthService) {
         return TokenResponse(tokens.accessToken)
     }
 
-    @Operation(summary = "회원가입", description = "유저를 생성합니다")
+    @Operation(summary = "회원가입", description = "(email, password, nickname) =>")
     @PostMapping("/register")
     fun register(@RequestBody registerRequest: RegisterRequest){
         return authService.register(registerRequest)
     }
 
-    @Operation(summary = "email 중복 체크", description = "email 중복을 체크합니다.")
+    @Operation(summary = "중복체크 - 이메일", description = "(email) => boolean")
     @GetMapping("/checkDuplicatedEmail/{email}")
     fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
         return authService.checkDuplicatedEmail(email)
     }
 
-    @Operation(summary = "nickname 중복 체크", description = "nickname 중복을 체크합니다.")
+    @Operation(summary = "중복체크 - 닉네임", description = "(nickname) => boolean")
     @GetMapping("/checkDuplicatedNickname/{nickname}")
     fun checkDuplicatedNickname(@PathVariable nickname: String): Boolean {
         return authService.checkDuplicatedNickname(nickname)
+    }
+
+    @Operation(summary = "토큰재발급", description = "() => accessToken")
+    @PostMapping("/refreshToken")
+    fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
+        lateinit var tokenResponse: TokenResponse
+        try {
+            // refreshToken 추출, request로 변환
+            val cookies = request.cookies.associate { it.name to it.value }
+            val tokenReissued = authService.refreshToken(cookies["refreshToken"])
+            val cookie = jwtUtils.createRefreshTokenCookie(tokenReissued.refreshToken)
+            response.addCookie(cookie)
+            tokenResponse = TokenResponse(tokenReissued.accessToken)
+        }catch(e:RuntimeException){
+            val cookie = jwtUtils.deleteRefreshTokenCookie()
+            response.addCookie(cookie)
+            tokenResponse = TokenResponse("")
+        }
+        return tokenResponse
     }
 }
