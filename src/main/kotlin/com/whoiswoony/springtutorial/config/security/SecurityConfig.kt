@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.cors.CorsUtils
 
 
 @Configuration
@@ -51,6 +52,9 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and() // 조건별로 요청 허용/제한 설정
             .authorizeRequests()
+            .requestMatchers(
+                CorsUtils::isPreFlightRequest
+            ).permitAll()
             .antMatchers(
                 "/auth/**",
                 "/bucket/getBucket/**",
@@ -59,7 +63,9 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
                 "/bucket/getFindTop10/**",
                 "/quiz/getQuiz/**"
             ).permitAll()
-            .antMatchers("/admin/**").hasRole("ADMIN") //admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
+            .antMatchers(
+                "/admin/**"
+            ).hasRole("ADMIN") //admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
             .antMatchers(
                 "/user/**",
                 "/bucket/**",
