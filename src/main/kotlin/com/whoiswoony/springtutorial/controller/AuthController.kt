@@ -60,18 +60,21 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @PostMapping("/refreshToken")
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
         lateinit var tokenResponse: TokenResponse
-        try {
+        val cookies = request.cookies.associate { it.name to it.value }
+
+        tokenResponse = try {
             // refreshToken 추출, request로 변환
-            val cookies = request.cookies.associate { it.name to it.value }
             val tokenReissued = authService.refreshToken(cookies["refreshToken"])
             val cookie = jwtUtils.createRefreshTokenCookie(tokenReissued.refreshToken)
             response.addCookie(cookie)
-            tokenResponse = TokenResponse(tokenReissued.accessToken)
+            TokenResponse(tokenReissued.accessToken)
         }catch(e:RuntimeException){
+            authService.logout(cookies["refreshToken"])
             val cookie = jwtUtils.deleteRefreshTokenCookie()
             response.addCookie(cookie)
-            tokenResponse = TokenResponse("")
+            TokenResponse("")
         }
+
         return tokenResponse
     }
 }

@@ -38,13 +38,29 @@ class AuthService(
         val refreshToken = jwtUtils.createRefreshToken()
 
         val refreshTokenEntity = RefreshToken(
-                member,
-                refreshToken
+            member,
+            refreshToken
         )
 
         refreshTokenRepository.save(refreshTokenEntity)
 
         return Token(accessToken, refreshToken)
+    }
+
+    fun logout(refreshToken: String?) {
+        //refreshToken이 null일 시
+        refreshToken ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
+
+        val refreshTokenRequest = RefreshTokenRequest(refreshToken)
+
+        // refresh token db에서 가져오기
+        val refreshTokenFound = refreshTokenRepository.findByRefreshToken(refreshTokenRequest.refreshToken)
+
+        //refresh token이 db에 존재하지 않을 시
+        refreshTokenFound ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
+
+        //token 삭제
+        refreshTokenRepository.delete(refreshTokenFound)
     }
 
     fun register(registerRequest: RegisterRequest){
