@@ -1,6 +1,8 @@
 package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.config.security.JwtUtils
+import com.whoiswoony.springtutorial.controller.exception.CustomException
+import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.member.LoginRequest
 import com.whoiswoony.springtutorial.dto.member.RegisterRequest
@@ -38,6 +40,17 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
         return TokenResponse(tokens.accessToken)
     }
 
+    @Operation(summary = "로그아웃", description = "")
+    @PostMapping("/logout")
+    fun logout(request: HttpServletRequest, response: HttpServletResponse) {
+        val cookies = request.cookies.associate { it.name to it.value }
+
+        authService.logout(cookies["refreshToken"])
+        val cookie = jwtUtils.deleteRefreshTokenCookie()
+
+        response.addCookie(cookie)
+    }
+
     @Operation(summary = "회원가입", description = "(email, password, nickname) =>")
     @PostMapping("/register")
     fun register(@RequestBody registerRequest: RegisterRequest){
@@ -60,7 +73,9 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @PostMapping("/refreshToken")
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse): TokenResponse {
         lateinit var tokenResponse: TokenResponse
-        val cookies = request.cookies.associate { it.name to it.value }
+        val cookies = request.cookies?.associate { it.name to it.value }
+
+        cookies?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
 
         tokenResponse = try {
             // refreshToken 추출, request로 변환
