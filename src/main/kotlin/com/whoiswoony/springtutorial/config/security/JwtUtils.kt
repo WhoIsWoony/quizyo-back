@@ -85,7 +85,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
         cookie.maxAge = 1 * 24 * 60 * 60
 
         // optional properties
-        cookie.secure = false
+        cookie.secure = true
         cookie.isHttpOnly = true
         cookie.path = "/"
 
@@ -100,7 +100,7 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
         cookie.maxAge = 0
 
         // optional properties
-        cookie.secure = false
+        cookie.secure = true
         cookie.isHttpOnly = true
         cookie.path = "/"
 
