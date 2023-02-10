@@ -81,7 +81,7 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("http://localhost:3000")
+        configuration.allowedOrigins = listOf("http://localhost:3000","https://quizyo.develop.woonyhouse.com")
         configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT")
         configuration.allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
         configuration.allowCredentials = true
