@@ -60,7 +60,7 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
                 "/bucket/getBucket/**",
                 "/bucket/getOneBucket/**",
                 "/bucket/addBucketView/**",
-                "/bucket/ddd/**",
+                "/bucket/getFindTop10/**",
                 "/quiz/getQuiz/**"
             ).permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN") //admin으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
