@@ -5,8 +5,8 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.member.LoginRequest
-import com.whoiswoony.springtutorial.dto.member.RegisterRequest
 import com.whoiswoony.springtutorial.dto.member.TokenResponse
+import com.whoiswoony.springtutorial.dto.member.RegisterRequest
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -27,34 +27,39 @@ import javax.servlet.http.HttpServletResponse
 class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils) {
     @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
-    fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse {
+    fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse
 
-        val tokens = authService.login(loginRequest)
+    {
+
+        val tokenInfo = authService.login(loginRequest)
 
         // create a cookie
-        val cookie = jwtUtils.createRefreshTokenCookie(tokens.refreshToken)
+        val cookie = jwtUtils.createRefreshTokenCookie(tokenInfo.refreshToken)
 
         // add cookie to response
         response.addCookie(cookie)
 
-        return TokenResponse(tokens.accessToken)
+        return TokenResponse(tokenInfo.nickname, tokenInfo.accessToken)
     }
 
     @Operation(summary = "로그아웃", description = "")
     @PostMapping("/logout")
-    fun logout(request: HttpServletRequest, response: HttpServletResponse) {
+    fun logout(request: HttpServletRequest, response: HttpServletResponse): Boolean {
         val cookies = request.cookies.associate { it.name to it.value }
 
         authService.logout(cookies["refreshToken"])
         val cookie = jwtUtils.deleteRefreshTokenCookie()
 
         response.addCookie(cookie)
+
+        return true
     }
 
     @Operation(summary = "회원가입", description = "(email, password, nickname) =>")
     @PostMapping("/register")
-    fun register(@RequestBody registerRequest: RegisterRequest){
-        return authService.register(registerRequest)
+    fun register(@RequestBody registerRequest: RegisterRequest): Boolean {
+        authService.register(registerRequest)
+        return true
     }
 
     @Operation(summary = "중복체크 - 이메일", description = "(email) => boolean")
@@ -82,12 +87,12 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
             val tokenReissued = authService.refreshToken(cookies["refreshToken"])
             val cookie = jwtUtils.createRefreshTokenCookie(tokenReissued.refreshToken)
             response.addCookie(cookie)
-            TokenResponse(tokenReissued.accessToken)
+            TokenResponse(tokenReissued.nickname, tokenReissued.accessToken)
         }catch(e:RuntimeException){
             authService.logout(cookies["refreshToken"])
             val cookie = jwtUtils.deleteRefreshTokenCookie()
             response.addCookie(cookie)
-            TokenResponse("")
+            TokenResponse(null,null)
         }
 
         return tokenResponse

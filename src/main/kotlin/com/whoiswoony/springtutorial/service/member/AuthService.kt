@@ -4,10 +4,7 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.*
-import com.whoiswoony.springtutorial.dto.member.LoginRequest
-import com.whoiswoony.springtutorial.dto.member.RefreshTokenRequest
-import com.whoiswoony.springtutorial.dto.member.RegisterRequest
-import com.whoiswoony.springtutorial.dto.member.Token
+import com.whoiswoony.springtutorial.dto.member.*
 import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -21,7 +18,7 @@ class AuthService(
     private val jwtUtils: JwtUtils,
     private val validation: Validation
 ) {
-    fun login(loginRequest: LoginRequest) : Token {
+    fun login(loginRequest: LoginRequest) : TokenInfo {
         val member = memberRepository.findByEmail(loginRequest.email)
 
         //존재하지 않는 email
@@ -44,7 +41,7 @@ class AuthService(
 
         refreshTokenRepository.save(refreshTokenEntity)
 
-        return Token(accessToken, refreshToken)
+        return TokenInfo(member.nickname, accessToken, refreshToken)
     }
 
     fun logout(refreshToken: String?) {
@@ -100,7 +97,7 @@ class AuthService(
         }
     }
 
-    fun refreshToken(refreshToken: String?): Token {
+    fun refreshToken(refreshToken: String?): TokenInfo {
         //refreshToken이 null일 시
         refreshToken ?: throw CustomException(ErrorCode.NOT_EXIST_REFRESH_TOKEN)
 
@@ -122,7 +119,7 @@ class AuthService(
         refreshTokenFound.refreshToken = newRefreshToken
         refreshTokenRepository.save(refreshTokenFound)
 
-        return Token(newAccessToken, newRefreshToken)
+        return TokenInfo(refreshTokenFound.member.nickname, newAccessToken, newRefreshToken)
     }
 
     // db에 동일한 이메일 존재시 false 반환

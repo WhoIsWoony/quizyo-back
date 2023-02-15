@@ -12,16 +12,18 @@ import org.springframework.stereotype.Service
 
 @Service
 class QuizService (private val quizRepository: QuizRepository, private val bucketRepository: BucketRepository){
-    fun addQuiz(addQuizRequest: AddQuizRequest){
+    fun addQuiz(addQuizRequest: AddQuizRequest): AddQuizResponse {
         val bucket = bucketRepository.findByIdOrNull(addQuizRequest.bucketId)
         bucket ?: throw CustomException(ErrorCode.NOT_FOUND_BUCKET)
 
         val quiz = Quiz(addQuizRequest.question, addQuizRequest.answer, addQuizRequest.sequence, bucket)
-        quizRepository.save(quiz)
+        val result = quizRepository.save(quiz)
+        return AddQuizResponse(result.id!!)
     }
 
-    fun deleteQuiz(deleteQuizRequest: DeleteQuizRequest){
+    fun deleteQuiz(deleteQuizRequest: DeleteQuizRequest): Boolean {
         quizRepository.deleteById(deleteQuizRequest.id)
+        return true
     }
 
     fun changeQuizOrder(changeQuizOrder: ChangeQuizOrder){
@@ -33,7 +35,7 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
     }
 
 
-    fun updateQuiz(updateQuizRequest: UpdateQuizRequest){
+    fun updateQuiz(updateQuizRequest: UpdateQuizRequest): UpdateQuizResponse {
         val quiz = quizRepository.findByIdOrNull(updateQuizRequest.id)
         quiz ?: throw CustomException(ErrorCode.NOT_FOUND_QUIZ)
 
@@ -41,7 +43,8 @@ class QuizService (private val quizRepository: QuizRepository, private val bucke
         quiz.answer = updateQuizRequest.answer
         quiz.sequence = updateQuizRequest.sequence
 
-        quizRepository.save(quiz)
+        val result = quizRepository.save(quiz)
+        return UpdateQuizResponse(result.id!!)
     }
 
     fun getQuiz(bucketId:Long): GetQuizResponse {

@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*
 class QuizController(private val quizService: QuizService) {
     @Operation(summary = "퀴즈추가", description = "(bucketId, title, description) =>")
     @PostMapping("/addQuiz")
-    fun addQuiz(@RequestBody addQuizRequest: AddQuizRequest){
-        quizService.addQuiz(addQuizRequest)
+    fun addQuiz(@RequestBody addQuizRequest: AddQuizRequest): AddQuizResponse {
+        return quizService.addQuiz(addQuizRequest)
     }
 
     @Operation(summary = "퀴즈불러오기", description = "(bucketId) =>")
@@ -25,14 +25,14 @@ class QuizController(private val quizService: QuizService) {
 
     @Operation(summary = "퀴즈업데이트", description = "() =>")
     @PostMapping("/updateQuiz")
-    fun updateQuiz(@RequestBody updateQuizRequest: UpdateQuizRequest) {
-        quizService.updateQuiz(updateQuizRequest)
+    fun updateQuiz(@RequestBody updateQuizRequest: UpdateQuizRequest): UpdateQuizResponse {
+        return quizService.updateQuiz(updateQuizRequest)
     }
 
     @Operation(summary = "퀴즈삭제", description = "() =>")
     @PostMapping("/deleteQuiz")
-    fun updateQuiz(@RequestBody deleteQuizRequest: DeleteQuizRequest) {
-        quizService.deleteQuiz(deleteQuizRequest)
+    fun deleteQuiz(@RequestBody deleteQuizRequest: DeleteQuizRequest): Boolean {
+        return quizService.deleteQuiz(deleteQuizRequest)
     }
 
 }

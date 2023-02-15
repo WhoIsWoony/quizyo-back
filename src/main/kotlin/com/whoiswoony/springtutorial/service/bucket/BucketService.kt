@@ -21,10 +21,11 @@ class BucketService (private val bucketRepository: BucketRepository,
                      private val bucketViewRepository: BucketViewRepository,
                      private val validation: Validation){
 
-    fun addBucket(memberEmail:String, addBucketRequest: AddBucketRequest){
+    fun addBucket(memberEmail:String, addBucketRequest: AddBucketRequest): Long? {
         val member = memberRepository.findByEmail(memberEmail)!!
         val bucket = Bucket(addBucketRequest.title, addBucketRequest.description, member)
-        bucketRepository.save(bucket)
+        val result = bucketRepository.save(bucket)
+        return result.id
     }
 
     fun getBucket(): MutableList<BucketResponse> {

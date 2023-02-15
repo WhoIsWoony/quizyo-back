@@ -19,9 +19,9 @@ class BucketController(private val bucketService: BucketService, private val buc
 
     @Operation(summary = "버킷추가", description = "(title, description) =>")
     @PostMapping("/addBucket")
-    fun addBucket(@RequestBody addBucketRequest: AddBucketRequest){
+    fun addBucket(@RequestBody addBucketRequest: AddBucketRequest): Long? {
         val memberEmail = getMemberEmail()
-        bucketService.addBucket(memberEmail, addBucketRequest)
+        return bucketService.addBucket(memberEmail, addBucketRequest)
     }
 
     @Operation(summary = "버킷 전체 가져오기", description = "() =>")
@@ -38,10 +38,11 @@ class BucketController(private val bucketService: BucketService, private val buc
 
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
     @GetMapping("/addBucketView/{bucketId}")
-    fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest) {
+    fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest): Boolean {
         val ipAddress = getIp(request)
         logger.error { ipAddress }
         bucketService.addBucketView(bucketId, ipAddress)
+        return true
     }
 
     @Operation(summary = "버킷 공유하기", description = "(bucketId)=>")
