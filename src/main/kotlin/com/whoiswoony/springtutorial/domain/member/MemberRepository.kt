@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 interface MemberRepository:JpaRepository<Member, String>{
     fun findByEmail(email:String):Member?
     fun findByNickname(nickname:String):Member?
+    fun findByEmailAndNickname(email: String, nickname: String):Member?
 }

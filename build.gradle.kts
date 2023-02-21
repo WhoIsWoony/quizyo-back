@@ -70,6 +70,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.mockk:mockk:1.13.2")
 	testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
+
+	//mail certification with spring-boot-starter-mail
+	implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
 }
 
 tasks.withType<KotlinCompile> {

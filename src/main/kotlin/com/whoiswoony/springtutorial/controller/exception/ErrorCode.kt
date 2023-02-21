@@ -27,5 +27,8 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     INVALID_BUCKET_VIEW_UPDATE_TIME(HttpStatus.BAD_REQUEST, "24시간 이내에 동일한 IP로 추가된 조회 수가 존재합니다."),
 
     //Quiz error code
-    NOT_FOUND_QUIZ(HttpStatus.BAD_REQUEST,"퀴즈를 찾을 수 없습니다.")
+    NOT_FOUND_QUIZ(HttpStatus.BAD_REQUEST,"퀴즈를 찾을 수 없습니다."),
+
+    //Member error code
+    NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 계정정보 입니다."),
 }
