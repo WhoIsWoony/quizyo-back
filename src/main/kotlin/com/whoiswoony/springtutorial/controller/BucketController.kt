@@ -36,6 +36,13 @@ class BucketController(private val bucketService: BucketService, private val buc
         return bucketService.getOneBucket(bucketId)
     }
 
+    @Operation(summary = "나의 버킷 확인하기", description = "(bucketId) =>")
+    @GetMapping("/checkMine/{bucketId}")
+    fun checkMine(@PathVariable bucketId:Long): BucketCheckMine {
+        val memberEmail = getMemberEmail()
+        return bucketService.checkMine(bucketId, memberEmail)
+    }
+
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
     @GetMapping("/addBucketView/{bucketId}")
     fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest): Boolean {

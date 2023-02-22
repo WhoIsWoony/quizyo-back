@@ -5,6 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.bucket.*
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketRequest
+import com.whoiswoony.springtutorial.dto.bucket.BucketCheckMine
 import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
 import com.whoiswoony.springtutorial.logger
@@ -59,6 +60,13 @@ class BucketService (private val bucketRepository: BucketRepository,
             bucket.views.count(),
             bucket.id!!
         )
+    }
+
+
+    fun checkMine(bucketId:Long, memberEmail:String): BucketCheckMine {
+        val member = memberRepository.findByEmail(memberEmail)!!
+        val findBucket = member.buckets.find { it.id == bucketId }
+        return BucketCheckMine(findBucket!=null)
     }
 
 
