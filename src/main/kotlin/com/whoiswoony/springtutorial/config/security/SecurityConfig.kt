@@ -36,14 +36,13 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
 
             /* h2 콘솔 */
             "/h2-console/**"
-
         )
     }
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http // ID, Password 문자열을 Base64로 인코딩하여 전달하는 구조
-            .cors()
+            .cors().configurationSource(corsConfigurationSource())
             .and()
             .httpBasic().disable()  // Http basic Auth  기반으로 로그인 인증창이 뜸.  disable 시에 인증창 뜨지 않음.
             .csrf().disable() // csrf 설정
