@@ -53,8 +53,8 @@ dependencies {
 	kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
 
 	//Swagger = springdoc-openapi
-	implementation("org.springdoc:springdoc-openapi-ui:1.6.13")
-	implementation("org.springdoc:springdoc-openapi-kotlin:1.6.13")
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
+	implementation("org.springdoc:springdoc-openapi-kotlin:1.6.14")
 
 	//Logger
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.4")
@@ -68,8 +68,8 @@ dependencies {
 
 	//JUnit = Kotest + mockk
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.mockk:mockk:1.13.2")
-	testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
+	testImplementation("io.mockk:mockk:1.13.4")
+	testImplementation("io.kotest:kotest-runner-junit5:5.5.5")
 
 	//mail certification with spring-boot-starter-mail
 	implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
