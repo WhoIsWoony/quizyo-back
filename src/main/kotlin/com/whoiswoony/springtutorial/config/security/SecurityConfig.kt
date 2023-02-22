@@ -34,8 +34,6 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
             "/v3/api-docs/**",
             "/swagger-ui/**",
 
-            /* 회원가입과 로그인 */
-
             /* h2 콘솔 */
             "/h2-console/**"
 
@@ -45,7 +43,7 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http // ID, Password 문자열을 Base64로 인코딩하여 전달하는 구조
-            .cors().configurationSource(corsConfigurationSource())
+            .cors()
             .and()
             .httpBasic().disable()  // Http basic Auth  기반으로 로그인 인증창이 뜸.  disable 시에 인증창 뜨지 않음.
             .csrf().disable() // csrf 설정
