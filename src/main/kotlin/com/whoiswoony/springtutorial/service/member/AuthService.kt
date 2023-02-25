@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service
 class AuthService(
     private val memberRepository: MemberRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
+    private val authenticationRepository: AuthenticationRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
-    private val validation: Validation
+    private val validation: Validation,
+    private val sendMail: SendMail
 ) {
     fun login(loginRequest: LoginRequest) : TokenInfo {
         val member = memberRepository.findByEmail(loginRequest.email)
@@ -77,6 +79,10 @@ class AuthService(
         if(checkDuplicatedNickname(registerRequest.nickname))
             throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
 
+        val authentication = authenticationRepository.findByEmailAndCodeAndType(registerRequest.email, registerRequest.code, "REGISTER")
+
+        authentication ?: throw CustomException(ErrorCode.INVALID_VERIFICATION_CODE)
+
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
 
@@ -92,8 +98,38 @@ class AuthService(
 
         try{
             memberRepository.save(member)
+            authenticationRepository.delete(authentication)
         }catch (e:Exception){
+            println(e)
             throw CustomException(ErrorCode.REGISTER_ERROR)
+        }
+    }
+
+    fun authenticateRegisteringEmail(email: String): String{
+        if(checkDuplicatedEmail(email))
+            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
+        else
+        {
+            //기존 인증 코드 존재시 삭제
+            authenticationRepository.deleteByEmailAndType(email, "REGISTER")
+            //랜덤 인증코드 생성
+            val randomCode = sendMail.randomNumberGenerator(12)
+
+            //Authentication Entity 생성
+            var authentication = Authentication(
+                email,
+                randomCode,
+                "REGISTER"
+            )
+            authenticationRepository.save(authentication)
+
+            sendMail.SendMailForm(
+                    from = "noreply@quizyo.com",
+                    to = email,
+                    title = "quizyo 임시 비밀번호 발급",
+                    content = "회원님의 이메일 인증번호는 " + randomCode + "입니다."
+            )
+            return "성공적으로 메일을 발송하였습니다."
         }
     }
 
@@ -122,12 +158,12 @@ class AuthService(
         return TokenInfo(refreshTokenFound.member.nickname, newAccessToken, newRefreshToken)
     }
 
-    // db에 동일한 이메일 존재시 false 반환
+    // db에 동일한 이메일 존재시 true 반환
     fun checkDuplicatedEmail(email: String): Boolean {
         return memberRepository.findByEmail(email)!= null
     }
 
-    // db에 동일한 닉네임 존재시 false 반환
+    // db에 동일한 닉네임 존재시 true 반환
     fun checkDuplicatedNickname(nickname: String): Boolean {
         return memberRepository.findByNickname(nickname)!= null
     }
