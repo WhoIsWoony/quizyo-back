@@ -4,14 +4,8 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
-<<<<<<< HEAD
-import com.whoiswoony.springtutorial.dto.member.LoginRequest
-import com.whoiswoony.springtutorial.dto.member.TokenResponse
-import com.whoiswoony.springtutorial.dto.member.RegisterRequest
-=======
 import com.whoiswoony.springtutorial.dto.member.*
 import com.whoiswoony.springtutorial.service.Verification
->>>>>>> feature
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
