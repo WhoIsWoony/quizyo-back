@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.transaction.annotation.Transactional
 
 interface AuthenticationRepository:JpaRepository<Authentication, String>{
-    fun findByCode(code: String):Authentication?
+    fun findByEmailAndCodeAndType(email: String, code: String, type: String):Authentication?
     @Transactional
-    fun deleteByEmail(email: String)
+    fun deleteByEmailAndType(email: String, type: String)
 }

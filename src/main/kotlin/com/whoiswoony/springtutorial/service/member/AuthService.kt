@@ -63,7 +63,7 @@ class AuthService(
         if(checkDuplicatedNickname(registerRequest.nickname))
             throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
 
-        val authentication = authenticationRepository.findByCode(registerRequest.code)
+        val authentication = authenticationRepository.findByEmailAndCodeAndType(registerRequest.email, registerRequest.code, "REGISTER")
 
         authentication ?: throw CustomException(ErrorCode.INVALID_VERIFICATION_CODE)
 
@@ -84,7 +84,7 @@ class AuthService(
             memberRepository.save(member)
             authenticationRepository.delete(authentication)
         }catch (e:Exception){
-            print(e)
+            println(e)
             throw CustomException(ErrorCode.REGISTER_ERROR)
         }
     }
@@ -95,7 +95,7 @@ class AuthService(
         else
         {
             //기존 인증 코드 존재시 삭제
-            authenticationRepository.deleteByEmail(email)
+            authenticationRepository.deleteByEmailAndType(email, "REGISTER")
             //랜덤 인증코드 생성
             val randomCode = sendMail.randomNumberGenerator(12)
 
