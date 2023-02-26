@@ -13,6 +13,7 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     INVALID_PASSWORD_FORM(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 형식입니다."),
     REGISTER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
+    AUTHENTICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE,"요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
 
     //Token error code
     INVALID_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, "잘못된 JWT 서명입니다."),
@@ -32,4 +33,5 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
 
     //Member error code
     NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 계정정보 입니다."),
+    CHANGE_PASSWORD_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
 }
