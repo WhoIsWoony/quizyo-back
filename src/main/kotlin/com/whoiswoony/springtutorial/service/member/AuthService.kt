@@ -121,7 +121,8 @@ class AuthService(
                 randomCode,
                 "REGISTER"
             )
-            authenticationRepository.save(authentication)
+            try{ authenticationRepository.save(authentication) }
+            catch (e:Exception){ throw CustomException(ErrorCode.AUTHENTICATION_ERROR) }
 
             sendMail.SendMailForm(
                     from = "noreply@quizyo.com",

@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.controller
 
+import com.whoiswoony.springtutorial.dto.member.ChangePasswordRequest
 import com.whoiswoony.springtutorial.dto.member.IssueTemporalPasswordRequest
 import com.whoiswoony.springtutorial.service.member.MemberService
 import io.swagger.v3.oas.annotations.Operation
@@ -19,9 +20,9 @@ class MemberController(private val memberService: MemberService) {
         return "임시테스트"
     }
 
-    @Operation(summary = "임시 비밀번호 발급", description = "(email, nickname) => String")
-    @PostMapping("/issueTemporalPassword")
-    fun issueTemporalPassword(@RequestBody request: IssueTemporalPasswordRequest): String {
-        return memberService.issueTemporalPassword(request)
+    @Operation(summary = "비밀번호 변경", description = "(email, oldPassword, newPassword) => ")
+    @PostMapping("/changePassword")
+    fun changePassword(@RequestBody request: ChangePasswordRequest) {
+        return memberService.changePassword(request)
     }
 }
