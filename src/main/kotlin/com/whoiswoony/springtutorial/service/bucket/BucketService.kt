@@ -8,7 +8,6 @@ import com.whoiswoony.springtutorial.dto.bucket.AddBucketRequest
 import com.whoiswoony.springtutorial.dto.bucket.BucketCheckMine
 import com.whoiswoony.springtutorial.dto.bucket.BucketResponse
 import com.whoiswoony.springtutorial.dto.bucket.BucketTop10Response
-import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

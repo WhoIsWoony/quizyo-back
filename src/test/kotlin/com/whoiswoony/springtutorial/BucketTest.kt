@@ -5,6 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.bucket.*
 import com.whoiswoony.springtutorial.domain.member.Member
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
+import com.whoiswoony.springtutorial.domain.member.ResetCode
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
 import com.whoiswoony.springtutorial.service.Validation
@@ -31,6 +32,7 @@ class BucketTest :StringSpec({
     val bucketViewRepository = mockk<BucketViewRepository>()
     val bucketRepositorySupport = mockk<BucketRepositorySupport>()
     val bucketShareMyRepository = mockk<BucketShareMyRepository>()
+    val resetCode = ResetCode("")
     val validation = mockk<Validation>()
 
     val bucketService = BucketService(
@@ -67,7 +69,7 @@ class BucketTest :StringSpec({
         val email = "test@test.com"
         val password = "test123!"
         val nickname = "test"
-        val member = Member(email, password, nickname)
+        val member = Member(email, password, nickname, resetCode)
 
         val bucketId : Long = 1
         val bucketTitle = "test"
@@ -94,7 +96,7 @@ class BucketTest :StringSpec({
         val email = "test@test.com"
         val password = "test123!"
         val nickname = "test"
-        val member = Member(email, password, nickname)
+        val member = Member(email, password, nickname, resetCode)
 
         val bucketId : Long = 1
         val bucketTitle = "test"
@@ -126,12 +128,12 @@ class BucketTest :StringSpec({
         val bucketMakerEmail = "maker@maker.com"
         val bucketMakerPassword = "maker123!"
         val bucketMakerNickname = "maker"
-        val bucketMaker = Member(bucketMakerEmail, bucketMakerPassword, bucketMakerNickname)
+        val bucketMaker = Member(bucketMakerEmail, bucketMakerPassword, bucketMakerNickname, resetCode)
 
         val bucketSharerEmail = "test@test.com"
         val bucketSharerPassword = "test123!"
         val bucketSharerNickname = "test"
-        val bucketSharer = Member(bucketSharerEmail, bucketSharerPassword, bucketSharerNickname)
+        val bucketSharer = Member(bucketSharerEmail, bucketSharerPassword, bucketSharerNickname, resetCode)
 
         val bucketId : Long = 1
         val bucketTitle = "test"
@@ -162,7 +164,7 @@ class BucketTest :StringSpec({
         val fakeBucketId : Long = 1
         val fakeAddBucketShareMyRequest = AddBucketShareMyRequest(fakeBucketId)
 
-        every { memberRepository.findByEmail(any()) } returns Member(email, password, nickname)
+        every { memberRepository.findByEmail(any()) } returns Member(email, password, nickname, resetCode)
         every { bucketRepository.findById(fakeBucketId).orElse(null) } returns null
 
         //when
@@ -177,7 +179,7 @@ class BucketTest :StringSpec({
         val email = "test@test.com"
         val password = "test123!"
         val nickname = "test"
-        val member = Member(email, password, nickname)
+        val member = Member(email, password, nickname, resetCode)
 
         val bucketId : Long = 1
         val bucketTitle = "test"

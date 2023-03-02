@@ -5,6 +5,7 @@ import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.dto.member.ChangePasswordRequest
 import com.whoiswoony.springtutorial.dto.member.IssueTemporalPasswordRequest
+import com.whoiswoony.springtutorial.dto.member.ResetPasswordRequest
 import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
@@ -16,7 +17,6 @@ class MemberService (
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
     private val validation: Validation,
-    private val sendMail: SendMail
 ){
     fun changePassword(changePasswordRequest: ChangePasswordRequest) {
         val member = memberRepository.findByEmail(changePasswordRequest.memberEmail)

@@ -103,4 +103,16 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     fun verifyRegisteringEmail(@RequestParam email: String): String {
         return verification.typeVerification(VerificationRequest(email, "REGISTER"))
     }
+
+    @Operation(summary = "비밀번호 초기화 코드 발급", description = "(email, nickname) => String ")
+    @PostMapping("/issueResetCode")
+    fun issueResetCode(@RequestBody request: IssueResetCodeRequest): String {
+        return authService.issueResetCode(request)
+    }
+
+    @Operation(summary = "비밀번호 새로 입력", description = "(email, resetcode, newpassword) => ")
+    @PostMapping("/resetPassword")
+    fun resetPassword(@RequestBody request: ResetPasswordRequest) {
+        return authService.resetPassword(request)
+    }
 }

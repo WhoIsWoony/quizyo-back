@@ -34,4 +34,8 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     //Member error code
     NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 계정정보 입니다."),
     CHANGE_PASSWORD_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
+
+    //Reset code error code
+    NOT_EXIST_RESET_CODE(HttpStatus.BAD_REQUEST, "존재하지 않는 코드정보 입니다."),
+    SAVE_RESET_CODE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
 }

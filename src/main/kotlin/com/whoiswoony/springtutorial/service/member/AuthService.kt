@@ -7,14 +7,18 @@ import com.whoiswoony.springtutorial.domain.member.*
 import com.whoiswoony.springtutorial.dto.member.*
 import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.Validation
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.sql.Time
+import java.time.LocalTime
 
 @Service
 class AuthService(
     private val memberRepository: MemberRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
     private val authenticationRepository: AuthenticationRepository,
+    private val resetCodeRepository: ResetCodeRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtUtils: JwtUtils,
     private val validation: Validation,
@@ -91,6 +95,7 @@ class AuthService(
             registerRequest.email,
             encodedPassword,
             registerRequest.nickname,
+            ResetCode("")
         )
 
         //Member Role = USER로 설정
@@ -103,6 +108,18 @@ class AuthService(
             println(e)
             throw CustomException(ErrorCode.REGISTER_ERROR)
         }
+
+        val resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id)
+
+        resetCode?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
+
+        resetCode.member = member
+        try{
+            resetCodeRepository.save(resetCode)
+        }catch (e:Exception){
+            println(e)
+            throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR)
+        }
     }
 
     fun authenticateRegisteringEmail(email: String): String{
@@ -113,7 +130,7 @@ class AuthService(
             //기존 인증 코드 존재시 삭제
             authenticationRepository.deleteByEmailAndType(email, "REGISTER")
             //랜덤 인증코드 생성
-            val randomCode = sendMail.randomNumberGenerator(12)
+            val randomCode = sendMail.randomCodeGenerator(12)
 
             //Authentication Entity 생성
             var authentication = Authentication(
@@ -157,6 +174,39 @@ class AuthService(
         refreshTokenRepository.save(refreshTokenFound)
 
         return TokenInfo(refreshTokenFound.member.nickname, newAccessToken, newRefreshToken)
+    }
+
+    fun issueResetCode(issueResetCodeRequest: IssueResetCodeRequest): String {
+        val member = memberRepository.findByEmailAndNickname(issueResetCodeRequest.memberEmail, issueResetCodeRequest.memberNickname)
+
+        member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
+
+        //랜덤 인증코드 생성
+        val randomCode = sendMail.randomCodeGenerator(20)
+
+        var resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id!!)
+
+        resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
+
+        //ResetCode Entity 재정의
+        resetCode.code = randomCode
+        // 코드 유효시간은 plusMinutes 변수
+        resetCode.expireTime = Time.valueOf(LocalTime.now().plusMinutes(5))
+
+        try{ resetCodeRepository.save(resetCode) }
+        catch (e: Exception) { throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR)}
+
+        sendMail.SendMailForm(
+            from = "noreply@quizyo.com",
+            to = issueResetCodeRequest.memberEmail,
+            title = "quizyo 비밀번호 초기화",
+            content = "비밀번호 초기화 토큰은 " + randomCode + "입니다."
+        )
+        return "성공적으로 메일을 발송하였습니다."
+    }
+
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+
     }
 
     // db에 동일한 이메일 존재시 true 반환

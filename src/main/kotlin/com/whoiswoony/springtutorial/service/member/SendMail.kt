@@ -1,8 +1,10 @@
 package com.whoiswoony.springtutorial.service.member
 
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
+import java.security.SecureRandom
 
 @Service
 class SendMail (
@@ -22,13 +24,16 @@ class SendMail (
        javaMailSender.send(email)
     }
 
-    // 무작위 번호 생성 함수
-    fun randomNumberGenerator(codeLength:Int):String {
-        val charPool: List<Char> = ('a'..'z')+('!'..'+')+('A'..'Z')+('0'..'9')
+    // 무작위 문자열 생성 함수
+    fun randomCodeGenerator(codeLength: Int): String{
 
-        return (6..codeLength)
-            .map { kotlin.random.Random.nextInt(0,charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
+        val specialCharacterSet = "!@#$%^&*"
+
+        var randomCode = RandomStringUtils.randomAlphanumeric(codeLength - 1)
+
+        val randomCodeIndex = (Math.random() * codeLength).toInt()
+        val randomSpecialCharacterIndex = (Math.random() * specialCharacterSet.length).toInt()
+
+        return randomCode.substring(0, randomCodeIndex) + specialCharacterSet[randomSpecialCharacterIndex] + randomCode.substring(randomCodeIndex)
     }
 }

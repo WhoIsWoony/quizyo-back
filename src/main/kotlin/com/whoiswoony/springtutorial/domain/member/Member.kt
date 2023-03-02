@@ -16,6 +16,9 @@ class Member(
     @Column(unique = true)
     val nickname: String,
 
+    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST])
+    val resetCode: ResetCode,
+
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     var roles: MutableSet<Authority> = mutableSetOf(),
 

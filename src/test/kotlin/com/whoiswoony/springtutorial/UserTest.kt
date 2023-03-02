@@ -4,10 +4,7 @@ import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.config.security.UserDetailsService
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
-import com.whoiswoony.springtutorial.domain.member.AuthenticationRepository
-import com.whoiswoony.springtutorial.domain.member.Member
-import com.whoiswoony.springtutorial.domain.member.MemberRepository
-import com.whoiswoony.springtutorial.domain.member.RefreshTokenRepository
+import com.whoiswoony.springtutorial.domain.member.*
 import com.whoiswoony.springtutorial.dto.member.LoginRequest
 import com.whoiswoony.springtutorial.dto.member.RegisterRequest
 import com.whoiswoony.springtutorial.service.Validation
@@ -36,13 +33,16 @@ class UserTest:StringSpec ({
     val memberRepository = mockk<MemberRepository>()
     val refreshTokenRepository = mockk<RefreshTokenRepository>()
     val authenticationRepository = mockk<AuthenticationRepository>()
+    val resetCodeRepository = mockk<ResetCodeRepository>()
     val jwtUtils : JwtUtils = JwtUtils(UserDetailsService(memberRepository))
     val memberValidation : Validation = Validation()
     val javaMailSender = mockk<JavaMailSender>()
+    val resetCode = ResetCode("")
     val memberService : AuthService = AuthService(
         memberRepository = memberRepository,
         refreshTokenRepository = refreshTokenRepository,
         authenticationRepository = authenticationRepository,
+        resetCodeRepository = resetCodeRepository,
         passwordEncoder = passwordEncoder(),
         jwtUtils = jwtUtils,
         validation = memberValidation,
@@ -86,7 +86,7 @@ class UserTest:StringSpec ({
 
         every {
             memberRepository.findByEmail(any())
-        } returns Member(duplicatedEmail, "test123!!", "test1")
+        } returns Member(duplicatedEmail, "test123!!", "test1", resetCode)
 
         //when
         val response = shouldThrow<RuntimeException> { memberService.register(registerRequest) }
@@ -104,7 +104,7 @@ class UserTest:StringSpec ({
 
         every {
             memberRepository.findByNickname("test")
-        } returns Member("test1@test.com", "test123!!", duplicatedNickname )
+        } returns Member("test1@test.com", "test123!!", duplicatedNickname, resetCode)
 
         //when
         val response =  shouldThrow<RuntimeException> { memberService.register(registerRequest) }
@@ -138,7 +138,7 @@ class UserTest:StringSpec ({
 
         every {
             memberRepository.findByEmail(email)
-        } returns Member(email, password, nickname)
+        } returns Member(email, password, nickname, resetCode)
 
         //when
         val exception = shouldThrow<RuntimeException> { memberService.login(loginRequest) }
