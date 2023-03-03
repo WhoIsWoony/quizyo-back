@@ -87,6 +87,12 @@ class AuthService(
 
         authentication ?: throw CustomException(ErrorCode.INVALID_VERIFICATION_CODE)
 
+        //현재시간 구하기
+        val currentTime = Time.valueOf(LocalTime.now())
+
+        if(currentTime.after(authentication.expireTime))
+            throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
+
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
 
@@ -131,12 +137,15 @@ class AuthService(
             authenticationRepository.deleteByEmailAndType(email, "REGISTER")
             //랜덤 인증코드 생성
             val randomCode = sendMail.randomCodeGenerator(12)
+            //인증코드 유효시간 설정
+            val expireTime = Time.valueOf(LocalTime.now().plusMinutes(30))
 
             //Authentication Entity 생성
             var authentication = Authentication(
                 email,
                 randomCode,
-                "REGISTER"
+                "REGISTER",
+                expireTime
             )
             try{ authenticationRepository.save(authentication) }
             catch (e:Exception){ throw CustomException(ErrorCode.AUTHENTICATION_ERROR) }
@@ -144,8 +153,10 @@ class AuthService(
             sendMail.SendMailForm(
                     from = "noreply@quizyo.com",
                     to = email,
-                    title = "quizyo 임시 비밀번호 발급",
-                    content = "회원님의 이메일 인증번호는 " + randomCode + "입니다."
+                    title = "quizyo 이메일 인증번호 발급",
+                    content = "회원님의 이메일 인증번호는 " + randomCode + "입니다.\n" +
+                            "인증번호의 유효시간은 30분입니다.\n" +
+                            "30분 이내에 인증을 완료해주세요."
             )
             return "성공적으로 메일을 발송하였습니다."
         }
@@ -182,7 +193,7 @@ class AuthService(
         member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
         //랜덤 인증코드 생성
-        val randomCode = sendMail.randomCodeGenerator(20)
+        val randomCode = sendMail.randomCodeGenerator(40)
 
         var resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id!!)
 
@@ -191,7 +202,7 @@ class AuthService(
         //ResetCode Entity 재정의
         resetCode.code = randomCode
         // 코드 유효시간은 plusMinutes 변수
-        resetCode.expireTime = Time.valueOf(LocalTime.now().plusMinutes(5))
+        resetCode.expireTime = Time.valueOf(LocalTime.now().plusMinutes(10))
 
         try{ resetCodeRepository.save(resetCode) }
         catch (e: Exception) { throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR)}
@@ -200,13 +211,39 @@ class AuthService(
             from = "noreply@quizyo.com",
             to = issueResetCodeRequest.memberEmail,
             title = "quizyo 비밀번호 초기화",
-            content = "비밀번호 초기화 토큰은 " + randomCode + "입니다."
+            content = "비밀번호 초기화 토큰은 " + randomCode + "입니다.\n" +
+                    "토큰의 유효시간은 10분입니다.\n" +
+                    "10분 이내에 인증을 완료해주세요."
         )
         return "성공적으로 메일을 발송하였습니다."
     }
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+        val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.passwordResetCode)
 
+        resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
+
+        //현재시간 구하기
+        val currentTime = Time.valueOf(LocalTime.now())
+
+        if(currentTime.after(resetCode.expireTime))
+            throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
+        else{
+            var member = memberRepository.findByEmail(resetPasswordRequest.memberEmail)
+
+            member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
+
+            member.password = passwordEncoder.encode(resetPasswordRequest.newPassword)
+
+            resetCode.code=""
+            resetCode.expireTime=null
+
+            try{
+                memberRepository.save(member)
+                resetCodeRepository.save(resetCode)
+            }
+            catch (e: Exception) { throw CustomException(ErrorCode.RESET_PASSWORD_ERROR)}
+        }
     }
 
     // db에 동일한 이메일 존재시 true 반환
