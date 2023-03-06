@@ -206,9 +206,9 @@ class AuthService(
             from = "noreply@quizyo.com",
             to = issueResetCodeRequest.email,
             title = "quizyo 비밀번호 초기화",
-            content = "비밀번호 초기화 토큰은 " + baseUrl + randomCode + "입니다.\n" +
-                    "토큰의 유효시간은 " + validTime + "분입니다.\n" +
-                    validTime + "분 이내에 인증을 완료해주세요."
+            content = "비밀번호 초기화 URL은 " + baseUrl + randomCode + "입니다.\n" +
+                    "URL의 입력 유효시간은 " + validTime + "분입니다.\n" +
+                    validTime + "분 이내에 입력을 완료해주세요."
         )
         return true
     }
