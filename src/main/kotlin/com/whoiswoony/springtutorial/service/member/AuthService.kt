@@ -128,38 +128,33 @@ class AuthService(
         }
     }
 
-    fun authenticateRegisteringEmail(email: String): String{
-        if(checkDuplicatedEmail(email))
-            throw CustomException(ErrorCode.DUPLICATE_EMAIL)
-        else
-        {
-            //기존 인증 코드 존재시 삭제
-            authenticationRepository.deleteByEmailAndType(email, "REGISTER")
-            //랜덤 인증코드 생성
-            val randomCode = sendMail.randomCodeGenerator(12)
-            //인증코드 유효시간 설정
-            val expireTime = Time.valueOf(LocalTime.now().plusMinutes(30))
+    fun authenticateRegisteringEmail(email: String): Boolean{
+        //기존 인증 코드 존재시 삭제
+        authenticationRepository.deleteByEmailAndType(email, "REGISTER")
+        //랜덤 인증코드 생성
+        val randomCode = sendMail.randomCodeGenerator(12)
+        //인증코드 유효시간 설정
+        val expireTime = Time.valueOf(LocalTime.now().plusMinutes(30))
 
-            //Authentication Entity 생성
-            var authentication = Authentication(
-                email,
-                randomCode,
-                "REGISTER",
-                expireTime
-            )
-            try{ authenticationRepository.save(authentication) }
-            catch (e:Exception){ throw CustomException(ErrorCode.AUTHENTICATION_ERROR) }
+        //Authentication Entity 생성
+        var authentication = Authentication(
+            email,
+            randomCode,
+            "REGISTER",
+            expireTime
+        )
+        try{ authenticationRepository.save(authentication) }
+        catch (e:Exception){ throw CustomException(ErrorCode.AUTHENTICATION_ERROR) }
 
-            sendMail.SendMailForm(
-                    from = "noreply@quizyo.com",
-                    to = email,
-                    title = "quizyo 이메일 인증번호 발급",
-                    content = "회원님의 이메일 인증번호는 " + randomCode + "입니다.\n" +
-                            "인증번호의 유효시간은 30분입니다.\n" +
-                            "30분 이내에 인증을 완료해주세요."
-            )
-            return "성공적으로 메일을 발송하였습니다."
-        }
+        sendMail.SendMailForm(
+                from = "noreply@quizyo.com",
+                to = email,
+                title = "quizyo 이메일 인증번호 발급",
+                content = "회원님의 이메일 인증번호는 " + randomCode + "입니다.\n" +
+                        "인증번호의 유효시간은 30분입니다.\n" +
+                        "30분 이내에 인증을 완료해주세요."
+        )
+        return true
     }
 
     fun refreshToken(refreshToken: String?): TokenInfo {

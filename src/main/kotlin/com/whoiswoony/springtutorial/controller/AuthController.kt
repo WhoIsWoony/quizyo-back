@@ -62,12 +62,6 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
         return true
     }
 
-    @Operation(summary = "중복체크 - 이메일", description = "(email) => boolean")
-    @GetMapping("/checkDuplicatedEmail/{email}")
-    fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
-        return authService.checkDuplicatedEmail(email)
-    }
-
     @Operation(summary = "중복체크 - 닉네임", description = "(nickname) => boolean")
     @GetMapping("/checkDuplicatedNickname/{nickname}")
     fun checkDuplicatedNickname(@PathVariable nickname: String): Boolean {
@@ -98,10 +92,12 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
         return tokenResponse
     }
 
-    @Operation(summary = "인증번호 발송", description = "(email) => String")
+    @Operation(summary = "이메일 중복체크 및 인증번호 발송", description = "(email) => String")
     @PostMapping("/verifyRegisteringEmail")
-    fun verifyRegisteringEmail(@RequestParam email: String): String {
-        return verification.typeVerification(VerificationRequest(email, "REGISTER"))
+    fun verifyRegisteringEmail(@RequestParam email: String): Boolean {
+        return if(authService.checkDuplicatedEmail(email))
+            verification.typeVerification(VerificationRequest(email, "REGISTER"))
+        else false
     }
 
     @Operation(summary = "비밀번호 초기화 코드 발급", description = "(email, nickname) => String ")

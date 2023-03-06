@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 class Verification (
         private val authService: AuthService,
 ){
-    fun typeVerification(verificationRequest: VerificationRequest): String {
+    fun typeVerification(verificationRequest: VerificationRequest): Boolean {
         return if(verificationRequest.type=="REGISTER")
             authService.authenticateRegisteringEmail(verificationRequest.email)
         else
-            ""
+            false
     }
 }
