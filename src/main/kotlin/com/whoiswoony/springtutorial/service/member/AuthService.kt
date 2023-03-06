@@ -106,9 +106,9 @@ class AuthService(
         catch (e:Exception){ throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR) }
     }
 
-    fun authenticateRegisteringEmail(email: String): Boolean{
+    fun authenticateRegisteringEmail(authenticateRegisteringEmailRequest: AuthenticateRegisteringEmailRequest): Boolean{
         //기존 인증 코드 존재시 삭제
-        authenticationRepository.deleteByEmail(email)
+        authenticationRepository.deleteByEmail(authenticateRegisteringEmailRequest.email)
         //랜덤 인증코드 생성
         val randomCode = sendMail.randomCodeGenerator(12)
 
@@ -119,7 +119,7 @@ class AuthService(
 
         //Authentication Entity 생성
         var authentication = Authentication(
-            email,
+            authenticateRegisteringEmailRequest.email,
             randomCode,
             expireTime
         )
@@ -128,7 +128,7 @@ class AuthService(
 
         sendMail.SendMailForm(
                 from = "noreply@quizyo.com",
-                to = email,
+                to = authenticateRegisteringEmailRequest.email,
                 title = "quizyo 이메일 인증번호 발급",
                 content = "회원님의 이메일 인증번호는 " + randomCode + "입니다.\n" +
                         "인증번호의 유효시간은 "+ validTime + "분입니다.\n" +
