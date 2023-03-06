@@ -113,7 +113,7 @@ class AuthService(
         val randomCode = sendMail.randomCodeGenerator(12)
 
         //인증코드 유효시간 설정
-        val validTime: Long = 30
+        val validTime: Long = 10
 
         val expireTime = Time.valueOf(LocalTime.now().plusMinutes(validTime))
 
