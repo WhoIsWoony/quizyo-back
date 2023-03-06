@@ -107,7 +107,7 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
 
     @Operation(summary = "비밀번호 초기화 코드 발급", description = "(email, nickname) => String ")
     @PostMapping("/issueResetCode")
-    fun issueResetCode(@RequestBody request: IssueResetCodeRequest): String {
+    fun issueResetCode(@RequestBody request: IssueResetCodeRequest): Boolean {
         return authService.issueResetCode(request)
     }
 

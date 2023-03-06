@@ -25,9 +25,13 @@ class SendMail (
        javaMailSender.send(email)
     }
 
+    //영어 대소문자 + 숫자
+    fun randomCodeGenerator(codeLength: Int): String {
+        return RandomStringUtils.randomAlphanumeric(codeLength)
+    }
 
     //영어 대소문자 + 숫자 + 1개의 특수문자
-    fun randomCodeGenerator(codeLength: Int): String{
+    fun randomCodeGeneratorWithSpecialCharacter(codeLength: Int): String{
 
         val specialCharacterSet = "!@#$%^&*"
 
@@ -39,7 +43,7 @@ class SendMail (
         return randomCode.substring(0, randomCodeIndex) + specialCharacterSet[randomSpecialCharacterIndex] + randomCode.substring(randomCodeIndex)
     }
 
-    //영어 대소문자 + 숫자 + 1개의 특수문자
+    //숫자
     fun randomAuthenticationCodeGenerator(codeLength: Int): String {
         return RandomStringUtils.randomNumeric(codeLength)
     }

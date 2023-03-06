@@ -179,13 +179,13 @@ class AuthService(
         return TokenInfo(refreshTokenFound.member.nickname, newAccessToken, newRefreshToken)
     }
 
-    fun issueResetCode(issueResetCodeRequest: IssueResetCodeRequest): String {
+    fun issueResetCode(issueResetCodeRequest: IssueResetCodeRequest): Boolean {
         val member = memberRepository.findByEmailAndNickname(issueResetCodeRequest.email, issueResetCodeRequest.nickname)
 
         member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
         //랜덤 인증코드 생성
-        val randomCode = sendMail.randomCodeGenerator(40)
+        val randomCode = sendMail.randomCodeGenerator(20)
 
         var resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id!!)
 
@@ -209,7 +209,7 @@ class AuthService(
                     "토큰의 유효시간은 " + validTime + "분입니다.\n" +
                     validTime + "분 이내에 인증을 완료해주세요."
         )
-        return "성공적으로 메일을 발송하였습니다."
+        return true
     }
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
