@@ -5,7 +5,6 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.member.*
-import com.whoiswoony.springtutorial.service.Verification
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 @Tag(name="AUTH API", description = "유저의 로그인, 회원가입, 중복체크, 토큰관리를 담당하는 API")
 @RestController
 @RequestMapping("/auth/")
-class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils, private val verification: Verification) {
+class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils) {
     @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse
@@ -96,7 +95,7 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @PostMapping("/authenticateRegisteringEmail")
     fun authenticateRegisteringEmail(@RequestParam email: String): Boolean {
         return if(authService.checkDuplicatedEmail(email))
-            verification.typeVerification(AuthenticationRequest(email, "REGISTER"))
+            authService.authenticateRegisteringEmail(email)
         else false
     }
 

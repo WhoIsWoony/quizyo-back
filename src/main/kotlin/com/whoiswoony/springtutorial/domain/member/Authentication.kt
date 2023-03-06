@@ -10,9 +10,6 @@ class Authentication (
     @Column(unique = true)
     var code: String,
 
-    //type = REGISTER, PASSWORD_CHANGE...
-    var type: String,
-
     @Temporal(TemporalType.TIME)
     var expireTime: Date,
 
