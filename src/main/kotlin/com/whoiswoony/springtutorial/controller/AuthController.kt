@@ -94,7 +94,7 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @Operation(summary = "이메일 중복체크 및 인증번호 발송", description = "(email) => String")
     @PostMapping("/authenticateRegisteringEmail")
     fun authenticateRegisteringEmail(@RequestBody authenticateRegisteringEmailRequest: AuthenticateRegisteringEmailRequest): Boolean {
-        return if(authService.checkDuplicatedEmail(authenticateRegisteringEmailRequest.email))
+        return if(!authService.checkDuplicatedEmail(authenticateRegisteringEmailRequest.email))
             authService.authenticateRegisteringEmail(authenticateRegisteringEmailRequest)
         else false
     }
