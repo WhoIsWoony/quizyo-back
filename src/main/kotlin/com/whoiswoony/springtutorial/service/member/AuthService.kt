@@ -100,7 +100,7 @@ class AuthService(
 
         resetCode?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
 
-        resetCode.member = member
+        resetCode.member = memberRepository.findByEmail(registerRequest.email)
 
         try{ resetCodeRepository.save(resetCode) }
         catch (e:Exception){ throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR) }
@@ -118,7 +118,7 @@ class AuthService(
         val expireTime = Time.valueOf(LocalTime.now().plusMinutes(validTime))
 
         //Authentication Entity 생성
-        var authentication = Authentication(
+        val authentication = Authentication(
             authenticateRegisteringEmailRequest.email,
             randomCode,
             expireTime
@@ -213,7 +213,7 @@ class AuthService(
         return true
     }
 
-    fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): Boolean {
         val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.code)
 
         resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
@@ -224,7 +224,7 @@ class AuthService(
         if(currentTime.after(resetCode.expireTime))
             throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
         else{
-            var member = resetCode.member
+            val member = resetCode.member
 
             member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
@@ -239,6 +239,7 @@ class AuthService(
             }
             catch (e: Exception) { throw CustomException(ErrorCode.RESET_PASSWORD_ERROR)}
         }
+        return true
     }
 
     // db에 동일한 이메일 존재시 true 반환

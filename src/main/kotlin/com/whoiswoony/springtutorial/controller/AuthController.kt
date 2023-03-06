@@ -113,7 +113,7 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
 
     @Operation(summary = "비밀번호 새로 입력", description = "(resetCode, newPassword) => ")
     @PostMapping("/resetPassword")
-    fun resetPassword(@RequestBody request: ResetPasswordRequest) {
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): Boolean {
         return authService.resetPassword(request)
     }
 }
