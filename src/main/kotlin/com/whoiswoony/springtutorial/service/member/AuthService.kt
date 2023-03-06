@@ -180,7 +180,7 @@ class AuthService(
     }
 
     fun issueResetCode(issueResetCodeRequest: IssueResetCodeRequest): String {
-        val member = memberRepository.findByEmailAndNickname(issueResetCodeRequest.memberEmail, issueResetCodeRequest.memberNickname)
+        val member = memberRepository.findByEmailAndNickname(issueResetCodeRequest.email, issueResetCodeRequest.nickname)
 
         member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
@@ -203,7 +203,7 @@ class AuthService(
 
         sendMail.SendMailForm(
             from = "noreply@quizyo.com",
-            to = issueResetCodeRequest.memberEmail,
+            to = issueResetCodeRequest.email,
             title = "quizyo 비밀번호 초기화",
             content = "비밀번호 초기화 토큰은 " + randomCode + "입니다.\n" +
                     "토큰의 유효시간은 " + validTime + "분입니다.\n" +
