@@ -223,7 +223,7 @@ class AuthService(
         if(currentTime.after(resetCode.expireTime))
             throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
         else{
-            var member = memberRepository.findByEmail(resetPasswordRequest.memberEmail)
+            var member = resetCode.member
 
             member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
