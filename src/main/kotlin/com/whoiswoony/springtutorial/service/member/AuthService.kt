@@ -214,7 +214,7 @@ class AuthService(
     }
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
-        val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.codePassword)
+        val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.code)
 
         resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
 
@@ -228,7 +228,7 @@ class AuthService(
 
             member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
-            member.password = passwordEncoder.encode(resetPasswordRequest.newPassword)
+            member.password = passwordEncoder.encode(resetPasswordRequest.password)
 
             resetCode.code=""
             resetCode.expireTime=null
