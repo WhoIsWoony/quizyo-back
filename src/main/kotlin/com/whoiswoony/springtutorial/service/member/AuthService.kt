@@ -110,7 +110,7 @@ class AuthService(
         //기존 인증 코드 존재시 삭제
         authenticationRepository.deleteByEmail(authenticateRegisteringEmailRequest.email)
         //랜덤 인증코드 생성
-        val randomCode = sendMail.randomCodeGenerator(12)
+        val randomCode = sendMail.randomAuthenticationCodeGenerator(6)
 
         //인증코드 유효시간 설정
         val validTime: Long = 10

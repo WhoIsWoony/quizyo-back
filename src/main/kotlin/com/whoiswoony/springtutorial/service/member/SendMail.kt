@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.service.member
 
+import net.bytebuddy.utility.RandomString
 import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
@@ -24,7 +25,8 @@ class SendMail (
        javaMailSender.send(email)
     }
 
-    // 무작위 문자열 생성 함수
+
+    //영어 대소문자 + 숫자 + 1개의 특수문자
     fun randomCodeGenerator(codeLength: Int): String{
 
         val specialCharacterSet = "!@#$%^&*"
@@ -35,5 +37,10 @@ class SendMail (
         val randomSpecialCharacterIndex = (Math.random() * specialCharacterSet.length).toInt()
 
         return randomCode.substring(0, randomCodeIndex) + specialCharacterSet[randomSpecialCharacterIndex] + randomCode.substring(randomCodeIndex)
+    }
+
+    //영어 대소문자 + 숫자 + 1개의 특수문자
+    fun randomAuthenticationCodeGenerator(codeLength: Int): String {
+        return RandomStringUtils.randomNumeric(codeLength)
     }
 }
