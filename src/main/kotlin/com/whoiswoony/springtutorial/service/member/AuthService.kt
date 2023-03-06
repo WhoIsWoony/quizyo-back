@@ -213,7 +213,7 @@ class AuthService(
     }
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest) {
-        val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.passwordResetCode)
+        val resetCode = resetCodeRepository.findByCode(resetPasswordRequest.codePassword)
 
         resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
 
