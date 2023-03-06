@@ -1,6 +1,6 @@
 package com.whoiswoony.springtutorial.dto.member
 
-data class VerificationRequest
+data class AuthenticationRequest
 (
     val email: String,
     val type: String,

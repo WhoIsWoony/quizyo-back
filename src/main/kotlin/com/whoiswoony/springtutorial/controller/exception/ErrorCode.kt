@@ -12,7 +12,7 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     INVALID_EMAIL_FORM(HttpStatus.BAD_REQUEST, "잘못된 이메일 형식입니다."),
     INVALID_PASSWORD_FORM(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 형식입니다."),
     REGISTER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
-    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
+    INVALID_AUTHENTICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
     AUTHENTICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE,"요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
     RESET_PASSWORD_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
     CODE_ALREADY_EXPIRED(HttpStatus.BAD_REQUEST, "인증정보의 유효시간이 경과하였습니다. 다시 인증해주세요."),

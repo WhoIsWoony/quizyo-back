@@ -83,16 +83,6 @@ class AuthService(
         if(checkDuplicatedNickname(registerRequest.nickname))
             throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
 
-        val authentication = authenticationRepository.findByEmailAndCodeAndType(registerRequest.email, registerRequest.code, "REGISTER")
-
-        authentication ?: throw CustomException(ErrorCode.INVALID_VERIFICATION_CODE)
-
-        //현재시간 구하기
-        val currentTime = Time.valueOf(LocalTime.now())
-
-        if(currentTime.after(authentication.expireTime))
-            throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
-
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
 
@@ -107,25 +97,17 @@ class AuthService(
         //Member Role = USER로 설정
         member.roles = mutableSetOf(Authority("ROLE_USER", member))
 
-        try{
-            memberRepository.save(member)
-            authenticationRepository.delete(authentication)
-        }catch (e:Exception){
-            println(e)
-            throw CustomException(ErrorCode.REGISTER_ERROR)
-        }
+        try{ memberRepository.save(member) }
+        catch (e:Exception){ throw CustomException(ErrorCode.REGISTER_ERROR) }
 
         val resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id)
 
         resetCode?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
 
         resetCode.member = member
-        try{
-            resetCodeRepository.save(resetCode)
-        }catch (e:Exception){
-            println(e)
-            throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR)
-        }
+
+        try{ resetCodeRepository.save(resetCode) }
+        catch (e:Exception){ throw CustomException(ErrorCode.SAVE_RESET_CODE_ERROR) }
     }
 
     fun authenticateRegisteringEmail(email: String): Boolean{
@@ -154,6 +136,25 @@ class AuthService(
                         "인증번호의 유효시간은 30분입니다.\n" +
                         "30분 이내에 인증을 완료해주세요."
         )
+        return true
+    }
+
+    fun checkAuthenticationCode(checkAuthenticationCodeRequest: CheckAuthenticationCodeRequest): Boolean {
+        val authentication =
+            authenticationRepository.findByEmailAndCodeAndType(checkAuthenticationCodeRequest.email, checkAuthenticationCodeRequest.code, "REGISTER")
+
+        authentication ?: throw CustomException(ErrorCode.INVALID_AUTHENTICATION_CODE)
+
+        //현재시간 구하기
+        val currentTime = Time.valueOf(LocalTime.now())
+
+        if(currentTime.after(authentication.expireTime))
+        {
+            try { authenticationRepository.delete(authentication) }
+            catch (e:Exception) { throw CustomException(ErrorCode.AUTHENTICATION_ERROR) }
+            throw CustomException(ErrorCode.CODE_ALREADY_EXPIRED)
+        }
+
         return true
     }
 

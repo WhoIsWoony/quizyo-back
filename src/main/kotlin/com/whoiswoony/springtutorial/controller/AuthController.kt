@@ -93,11 +93,17 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     }
 
     @Operation(summary = "이메일 중복체크 및 인증번호 발송", description = "(email) => String")
-    @PostMapping("/verifyRegisteringEmail")
-    fun verifyRegisteringEmail(@RequestParam email: String): Boolean {
+    @PostMapping("/authenticateRegisteringEmail")
+    fun authenticateRegisteringEmail(@RequestParam email: String): Boolean {
         return if(authService.checkDuplicatedEmail(email))
-            verification.typeVerification(VerificationRequest(email, "REGISTER"))
+            verification.typeVerification(AuthenticationRequest(email, "REGISTER"))
         else false
+    }
+
+    @Operation(summary = "이메일 인증번호 확인", description = "(email) => Boolean")
+    @PostMapping("/checkAuthenticationCode")
+    fun checkAuthenticationCode(@RequestBody request: CheckAuthenticationCodeRequest): Boolean {
+        return authService.checkAuthenticationCode(request)
     }
 
     @Operation(summary = "비밀번호 초기화 코드 발급", description = "(email, nickname) => String ")
