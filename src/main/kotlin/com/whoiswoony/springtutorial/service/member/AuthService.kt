@@ -185,9 +185,10 @@ class AuthService(
         member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
 
         //랜덤 인증코드 생성
+        val baseUrl = "http://localhost:3000/reset/change?code="
         val randomCode = sendMail.randomCodeGenerator(20)
 
-        var resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id!!)
+        val resetCode = resetCodeRepository.findByIdOrNull(member.resetCode.id!!)
 
         resetCode ?: throw CustomException(ErrorCode.NOT_EXIST_RESET_CODE)
 
@@ -205,7 +206,7 @@ class AuthService(
             from = "noreply@quizyo.com",
             to = issueResetCodeRequest.email,
             title = "quizyo 비밀번호 초기화",
-            content = "비밀번호 초기화 토큰은 " + randomCode + "입니다.\n" +
+            content = "비밀번호 초기화 토큰은 " + baseUrl + randomCode + "입니다.\n" +
                     "토큰의 유효시간은 " + validTime + "분입니다.\n" +
                     validTime + "분 이내에 인증을 완료해주세요."
         )
