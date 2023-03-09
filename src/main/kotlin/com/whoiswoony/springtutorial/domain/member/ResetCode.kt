@@ -5,7 +5,6 @@ import javax.persistence.*
 
 @Entity(name="RESET_CODE")
 class ResetCode (
-    @Column(unique = true)
     var code: String,
 
     @Temporal(TemporalType.TIME)
