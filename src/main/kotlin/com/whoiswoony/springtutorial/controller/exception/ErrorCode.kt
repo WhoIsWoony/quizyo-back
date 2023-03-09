@@ -12,8 +12,10 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     INVALID_EMAIL_FORM(HttpStatus.BAD_REQUEST, "잘못된 이메일 형식입니다."),
     INVALID_PASSWORD_FORM(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 형식입니다."),
     REGISTER_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
-    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
+    INVALID_AUTHENTICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증번호 입니다."),
     AUTHENTICATION_ERROR(HttpStatus.SERVICE_UNAVAILABLE,"요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
+    RESET_PASSWORD_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
+    CODE_ALREADY_EXPIRED(HttpStatus.BAD_REQUEST, "인증정보의 유효시간이 경과하였습니다. 다시 인증해주세요."),
 
     //Token error code
     INVALID_TOKEN_SIGNATURE(HttpStatus.UNAUTHORIZED, "잘못된 JWT 서명입니다."),
@@ -34,4 +36,8 @@ enum class ErrorCode(val status: HttpStatus, val message: String) {
     //Member error code
     NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "존재하지 않는 계정정보 입니다."),
     CHANGE_PASSWORD_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
+
+    //Reset code error code
+    NOT_EXIST_RESET_CODE(HttpStatus.BAD_REQUEST, "존재하지 않는 코드정보 입니다."),
+    SAVE_RESET_CODE_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "요청된 작업을 처리할 수 없습니다. 다시 시도해주세요."),
 }

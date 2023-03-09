@@ -73,6 +73,10 @@ dependencies {
 
 	//mail certification with spring-boot-starter-mail
 	implementation("org.springframework.boot:spring-boot-starter-mail:2.6.7")
+
+	//spring batch
+	implementation("org.springframework.boot:spring-boot-starter-batch")
+	testImplementation("org.springframework.batch:spring-batch-test")
 }
 
 tasks.withType<KotlinCompile> {

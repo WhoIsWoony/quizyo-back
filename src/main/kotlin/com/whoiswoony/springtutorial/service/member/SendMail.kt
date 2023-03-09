@@ -1,8 +1,11 @@
 package com.whoiswoony.springtutorial.service.member
 
+import net.bytebuddy.utility.RandomString
+import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
+import java.security.SecureRandom
 
 @Service
 class SendMail (
@@ -22,13 +25,26 @@ class SendMail (
        javaMailSender.send(email)
     }
 
-    // 무작위 번호 생성 함수
-    fun randomNumberGenerator(codeLength:Int):String {
-        val charPool: List<Char> = ('a'..'z')+('!'..'+')+('A'..'Z')+('0'..'9')
+    //영어 대소문자 + 숫자
+    fun randomCodeGenerator(codeLength: Int): String {
+        return RandomStringUtils.randomAlphanumeric(codeLength)
+    }
 
-        return (6..codeLength)
-            .map { kotlin.random.Random.nextInt(0,charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
+    //영어 대소문자 + 숫자 + 1개의 특수문자
+    fun randomCodeGeneratorWithSpecialCharacter(codeLength: Int): String{
+
+        val specialCharacterSet = "!@#$%^&*"
+
+        var randomCode = RandomStringUtils.randomAlphanumeric(codeLength - 1)
+
+        val randomCodeIndex = (Math.random() * codeLength).toInt()
+        val randomSpecialCharacterIndex = (Math.random() * specialCharacterSet.length).toInt()
+
+        return randomCode.substring(0, randomCodeIndex) + specialCharacterSet[randomSpecialCharacterIndex] + randomCode.substring(randomCodeIndex)
+    }
+
+    //숫자
+    fun randomAuthenticationCodeGenerator(codeLength: Int): String {
+        return RandomStringUtils.randomNumeric(codeLength)
     }
 }

@@ -1,7 +1,6 @@
 package com.whoiswoony.springtutorial.dto.member
 
-data class VerificationRequest
-(
+data class IssueResetCodeRequest (
     val email: String,
-    val type: String,
+    val nickname: String,
 )

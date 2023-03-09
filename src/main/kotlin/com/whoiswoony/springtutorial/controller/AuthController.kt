@@ -5,7 +5,6 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.member.*
-import com.whoiswoony.springtutorial.service.Verification
 import com.whoiswoony.springtutorial.service.member.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletResponse
 @Tag(name="AUTH API", description = "유저의 로그인, 회원가입, 중복체크, 토큰관리를 담당하는 API")
 @RestController
 @RequestMapping("/auth/")
-class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils, private val verification: Verification) {
+class AuthController(private val authService: AuthService, private val jwtUtils: JwtUtils) {
     @Operation(summary = "로그인", description = "(email, password) => {accessToken}")
     @PostMapping("/login")
     fun login(@RequestBody loginRequest: LoginRequest, response: HttpServletResponse): TokenResponse
@@ -62,12 +61,6 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
         return true
     }
 
-    @Operation(summary = "중복체크 - 이메일", description = "(email) => boolean")
-    @GetMapping("/checkDuplicatedEmail/{email}")
-    fun checkDuplicatedEmail(@PathVariable email: String): Boolean {
-        return authService.checkDuplicatedEmail(email)
-    }
-
     @Operation(summary = "중복체크 - 닉네임", description = "(nickname) => boolean")
     @GetMapping("/checkDuplicatedNickname/{nickname}")
     fun checkDuplicatedNickname(@PathVariable nickname: String): Boolean {
@@ -98,9 +91,29 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
         return tokenResponse
     }
 
-    @Operation(summary = "인증번호 발송", description = "(email) => String")
-    @PostMapping("/verifyRegisteringEmail")
-    fun verifyRegisteringEmail(@RequestParam email: String): String {
-        return verification.typeVerification(VerificationRequest(email, "REGISTER"))
+    @Operation(summary = "이메일 중복체크 및 인증번호 발송", description = "(email) => String")
+    @PostMapping("/authenticateRegisteringEmail")
+    fun authenticateRegisteringEmail(@RequestBody authenticateRegisteringEmailRequest: AuthenticateRegisteringEmailRequest): Boolean {
+        return if(!authService.checkDuplicatedEmail(authenticateRegisteringEmailRequest.email))
+            authService.authenticateRegisteringEmail(authenticateRegisteringEmailRequest)
+        else false
+    }
+
+    @Operation(summary = "이메일 인증번호 확인", description = "(email) => Boolean")
+    @PostMapping("/checkAuthenticationCode")
+    fun checkAuthenticationCode(@RequestBody request: CheckAuthenticationCodeRequest): Boolean {
+        return authService.checkAuthenticationCode(request)
+    }
+
+    @Operation(summary = "비밀번호 초기화 코드 발급", description = "(email, nickname) => String ")
+    @PostMapping("/issueResetCode")
+    fun issueResetCode(@RequestBody request: IssueResetCodeRequest): Boolean {
+        return authService.issueResetCode(request)
+    }
+
+    @Operation(summary = "비밀번호 새로 입력", description = "(resetCode, newPassword) => ")
+    @PostMapping("/resetPassword")
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): Boolean {
+        return authService.resetPassword(request)
     }
 }
