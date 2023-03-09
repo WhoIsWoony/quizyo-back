@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.config.security
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -79,11 +80,13 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
         return http.build()
     }
 
+    @Value("\${springSecurity.allowedOrigins-list}")
+    lateinit var allowedOriginsList: List<String>
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf("http://localhost:3000","https://quizyo.develop.woonyhouse.com")
+        configuration.allowedOrigins = allowedOriginsList
         configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT")
         configuration.allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
         configuration.allowCredentials = true
