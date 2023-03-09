@@ -54,7 +54,7 @@ class UserTest:StringSpec ({
         val wrongEmail = "test"
         val password = "test123!"
         val nickname = "test"
-        val registerRequest = RegisterRequest(wrongEmail, password, nickname, "REGISTER")
+        val registerRequest = RegisterRequest(wrongEmail, password, nickname)
 
         //when
         val exception = shouldThrow<RuntimeException> { memberService.register(registerRequest) }
@@ -68,7 +68,7 @@ class UserTest:StringSpec ({
         val email = "test@test.com"
         val wrongPassword = "test123"
         val nickname = "test"
-        val registerRequest = RegisterRequest(email, wrongPassword, nickname, "REGISTER")
+        val registerRequest = RegisterRequest(email, wrongPassword, nickname)
 
         //when
         val exception = shouldThrow<RuntimeException> { memberService.register(registerRequest) }
@@ -82,17 +82,17 @@ class UserTest:StringSpec ({
         val duplicatedEmail = "test@test.com"
         val password = "test123!"
         val nickname = "test"
-        val registerRequest = RegisterRequest(duplicatedEmail, password, nickname, "REGISTER")
 
         every {
             memberRepository.findByEmail(any())
-        } returns Member(duplicatedEmail, "test123!!", "test1", resetCode)
+        } returns Member(duplicatedEmail, password, nickname, resetCode)
 
         //when
-        val response = shouldThrow<RuntimeException> { memberService.register(registerRequest) }
+        val response = memberService.checkDuplicatedEmail(duplicatedEmail)
+
 
         //then
-        response shouldBe CustomException(ErrorCode.DUPLICATE_EMAIL)
+        response shouldBe true
     }
 
     "닉네임 중복체크"{
@@ -100,7 +100,7 @@ class UserTest:StringSpec ({
         val email = "test@test.com"
         val password = "test123!"
         val duplicatedNickname = "test"
-        val registerRequest = RegisterRequest(email, password, duplicatedNickname, "REGISTER")
+        val registerRequest = RegisterRequest(email, password, duplicatedNickname)
 
         every {
             memberRepository.findByNickname("test")
