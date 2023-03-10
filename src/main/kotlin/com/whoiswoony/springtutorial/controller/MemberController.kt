@@ -1,8 +1,6 @@
 package com.whoiswoony.springtutorial.controller
 
 import com.whoiswoony.springtutorial.dto.member.ChangePasswordRequest
-import com.whoiswoony.springtutorial.dto.member.IssueTemporalPasswordRequest
-import com.whoiswoony.springtutorial.dto.member.ResetPasswordRequest
 import com.whoiswoony.springtutorial.service.member.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

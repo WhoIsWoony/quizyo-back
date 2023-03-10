@@ -1,6 +1,5 @@
 package com.whoiswoony.springtutorial.controller
 
-import com.whoiswoony.springtutorial.config.security.getMemberEmail
 import com.whoiswoony.springtutorial.dto.quiz.*
 import com.whoiswoony.springtutorial.service.quiz.QuizService
 import io.swagger.v3.oas.annotations.Operation
