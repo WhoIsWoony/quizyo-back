@@ -84,15 +84,15 @@ class UserTest:StringSpec ({
         val nickname = "test"
 
         every {
-            memberRepository.findByEmail(any())
+            memberRepository.findByEmail(duplicatedEmail)
         } returns Member(duplicatedEmail, password, nickname, resetCode)
 
         //when
-        val response = memberService.checkDuplicatedEmail(duplicatedEmail)
+        val exception = shouldThrow<RuntimeException> { memberService.checkDuplicatedEmail(duplicatedEmail) }
 
 
         //then
-        response shouldBe true
+        exception shouldBe CustomException(ErrorCode.DUPLICATE_EMAIL)
     }
 
     "닉네임 중복체크"{
@@ -100,14 +100,13 @@ class UserTest:StringSpec ({
         val email = "test@test.com"
         val password = "test123!"
         val duplicatedNickname = "test"
-        val registerRequest = RegisterRequest(email, password, duplicatedNickname)
 
         every {
-            memberRepository.findByNickname("test")
-        } returns Member("test1@test.com", "test123!!", duplicatedNickname, resetCode)
+            memberRepository.findByNickname(duplicatedNickname)
+        } returns Member(email, password, duplicatedNickname, resetCode)
 
         //when
-        val response =  shouldThrow<RuntimeException> { memberService.register(registerRequest) }
+        val response =  shouldThrow<RuntimeException> { memberService.checkDuplicatedNickname(duplicatedNickname) }
 
         //then
         response shouldBe CustomException(ErrorCode.DUPLICATE_NICKNAME)
