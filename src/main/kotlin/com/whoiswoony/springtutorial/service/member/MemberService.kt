@@ -4,11 +4,7 @@ import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.dto.member.ChangePasswordRequest
-import com.whoiswoony.springtutorial.dto.member.IssueTemporalPasswordRequest
-import com.whoiswoony.springtutorial.dto.member.ResetPasswordRequest
 import com.whoiswoony.springtutorial.service.Validation
-import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
