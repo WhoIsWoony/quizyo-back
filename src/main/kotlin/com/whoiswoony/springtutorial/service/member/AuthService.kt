@@ -75,9 +75,8 @@ class AuthService(
         if(!validation.passwordValidation(registerRequest.password))
             throw CustomException(ErrorCode.INVALID_PASSWORD_FORM)
         
-        //닉네임 db 존재시 true, 아닐시 false 반환
-        if(checkDuplicatedNickname(registerRequest.nickname))
-            throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
+        //닉네임 중복 검사
+        checkDuplicatedNickname(registerRequest.nickname)
 
         //비밀번호 암호화
         val encodedPassword = passwordEncoder.encode(registerRequest.password)
@@ -242,13 +241,15 @@ class AuthService(
         return true
     }
 
-    // db에 동일한 이메일 존재시 true 반환
+    // db에 동일한 이메일 존재 X시 true 반환
     fun checkDuplicatedEmail(email: String): Boolean {
-        return memberRepository.findByEmail(email)!= null
+        memberRepository.findByEmail(email) ?: return true
+        throw CustomException(ErrorCode.DUPLICATE_EMAIL)
     }
 
-    // db에 동일한 닉네임 존재시 true 반환
+    // db에 동일한 닉네임 존재 X시 true 반환
     fun checkDuplicatedNickname(nickname: String): Boolean {
-        return memberRepository.findByNickname(nickname)!= null
+        memberRepository.findByNickname(nickname) ?: return true
+        throw CustomException(ErrorCode.DUPLICATE_NICKNAME)
     }
 }
