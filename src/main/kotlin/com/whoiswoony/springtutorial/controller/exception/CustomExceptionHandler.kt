@@ -10,6 +10,6 @@ class CustomExceptionHandler {
     @ExceptionHandler(CustomException::class)
     fun handleException(e: CustomException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(e.errorCode.status)
-            .body(ErrorResponse(e.errorCode.status.value(), e.errorCode.message))
+            .body(ErrorResponse(e.errorCode.status, e.errorCode.message))
     }
 }
