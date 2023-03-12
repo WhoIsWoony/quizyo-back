@@ -1,10 +1,12 @@
 package com.whoiswoony.springtutorial.domain.member
 
+import org.hibernate.annotations.ColumnDefault
 import java.util.*
 import javax.persistence.*
 
 @Entity(name="RESET_CODE")
 class ResetCode (
+    @ColumnDefault("")
     var code: String,
 
     @Temporal(TemporalType.TIME)
