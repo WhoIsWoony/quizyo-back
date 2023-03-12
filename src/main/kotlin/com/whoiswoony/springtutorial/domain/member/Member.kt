@@ -8,12 +8,12 @@ import javax.persistence.*
 @Entity(name="MEMBER")
 @DynamicUpdate
 class Member(
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     val email: String,
 
     var password: String,
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     val nickname: String,
 
     @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST])
