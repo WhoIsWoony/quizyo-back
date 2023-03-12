@@ -6,8 +6,7 @@ import javax.persistence.*
 
 @Entity(name="RESET_CODE")
 class ResetCode (
-    @ColumnDefault("")
-    var code: String,
+    var code: String ?= null,
 
     @Temporal(TemporalType.TIME)
     var expireTime: Date? = null,
