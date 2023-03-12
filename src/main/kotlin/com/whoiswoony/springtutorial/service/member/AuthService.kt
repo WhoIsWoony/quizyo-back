@@ -86,7 +86,7 @@ class AuthService(
             registerRequest.email,
             encodedPassword,
             registerRequest.nickname,
-            ResetCode("")
+            ResetCode()
         )
 
         //Member Role = USER로 설정
