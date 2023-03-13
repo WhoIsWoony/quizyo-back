@@ -1,6 +1,9 @@
 package com.whoiswoony.springtutorial.domain.bucket
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.sql.Time
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.Date
 import javax.persistence.*
 
@@ -26,7 +29,7 @@ class BucketView (
 ){
     @PrePersist
     private fun setCreatedDate(){
-        createdDate = Date()
-        createdTime = Date()
+        createdDate = java.sql.Date.valueOf(LocalDate.now())
+        createdTime = Time.valueOf(LocalTime.now())
     }
 }
