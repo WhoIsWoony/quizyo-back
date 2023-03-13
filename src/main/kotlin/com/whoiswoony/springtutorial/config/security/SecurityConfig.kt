@@ -87,7 +87,7 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = allowedOriginsList
-        configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT")
+        configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "OPTIONS")
         configuration.allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
         configuration.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
