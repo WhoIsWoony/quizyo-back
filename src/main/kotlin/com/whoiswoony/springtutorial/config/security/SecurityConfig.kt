@@ -1,5 +1,6 @@
 package com.whoiswoony.springtutorial.config.security
 
+import com.whoiswoony.springtutorial.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -85,6 +86,7 @@ class SecurityConfig(private val jwtUtils: JwtUtils):WebSecurityCustomizer {
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
+        logger.error(allowedOriginsList.toString())
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = allowedOriginsList
         configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT")
