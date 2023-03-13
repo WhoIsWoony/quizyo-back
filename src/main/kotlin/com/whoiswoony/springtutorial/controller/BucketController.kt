@@ -46,36 +46,36 @@ class BucketController(private val bucketService: BucketService, private val buc
     @GetMapping("/addBucketView/{bucketId}")
     fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest): Boolean {
         var ipAddress = request.getHeader("X-FORWARDED-FOR")
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("Proxy-Client-IP")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("WL-Proxy-Client-IP")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("HTTP_CLIENT_IP")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("X-Real-IP")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("X-RealIP")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.getHeader("REMOTE_ADDR")
         }
-
-        if (ipAddress == null || ipAddress.length == 0 || "unknown".equals(ipAddress, ignoreCase = true)) {
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
             ipAddress = request.remoteAddr
         }
 
