@@ -9,6 +9,7 @@ import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Tag(name="BUCKET API", description = "버킷은 퀴즈들을 담고 있는 그룹입니다. 버킷의 생성, 조회, 공유를 관리하는 API입니다.")
@@ -45,6 +46,17 @@ class BucketController(private val bucketService: BucketService, private val buc
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
     @GetMapping("/addBucketView/{bucketId}")
     fun addBucketView(@PathVariable bucketId:Long, request: HttpServletRequest): Boolean {
+
+        val headerNames: Enumeration<String>? = request.headerNames
+
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                val name = headerNames.nextElement() as String
+                val value = request.getHeader(name)
+                println("Header ::: $name : $value")
+            }
+        }
+
         var ipAddress = request.getHeader("X-FORWARDED-FOR")
         println(ipAddress)
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
