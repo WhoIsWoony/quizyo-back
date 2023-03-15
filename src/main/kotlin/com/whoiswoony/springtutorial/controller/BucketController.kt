@@ -1,13 +1,15 @@
 package com.whoiswoony.springtutorial.controller
 
+import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.config.security.getMemberEmail
 import com.whoiswoony.springtutorial.dto.*
 import com.whoiswoony.springtutorial.dto.bucket.*
-import com.whoiswoony.springtutorial.logger
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.servlet.http.HttpServletRequest
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpServletRequest
 @Tag(name="BUCKET API", description = "버킷은 퀴즈들을 담고 있는 그룹입니다. 버킷의 생성, 조회, 공유를 관리하는 API입니다.")
 @RestController
 @RequestMapping("/bucket/")
-class BucketController(private val bucketService: BucketService, private val bucketShareMyService: BucketShareMyService) {
+class BucketController(private val bucketService: BucketService, private val bucketShareMyService: BucketShareMyService, private val jwtUtils: JwtUtils) {
 
     @Operation(summary = "버킷추가", description = "(title, description) =>")
     @PostMapping("/addBucket")
@@ -45,8 +47,8 @@ class BucketController(private val bucketService: BucketService, private val buc
 
     @Operation(summary = "버킷 조회수 증가", description = "(bucketId, ipAddress) =>")
     @PostMapping("/addBucketView")
-    fun addBucketView(@RequestBody addBucketViewRequest: AddBucketViewRequest): Boolean {
-        bucketService.addBucketView(addBucketViewRequest)
+    fun addBucketView(@RequestParam bucketId: Long, request: HttpServletRequest): Boolean {
+        bucketService.addBucketView(bucketId, request)
         return true
     }
 
