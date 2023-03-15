@@ -1,22 +1,23 @@
 package com.whoiswoony.springtutorial.service.bucket
 
+import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.bucket.*
 import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.dto.bucket.*
-import com.whoiswoony.springtutorial.service.Validation
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.sql.Date
 import java.time.LocalDate
+import javax.servlet.http.HttpServletRequest
 
 @Service
 class BucketService (private val bucketRepository: BucketRepository,
                      private val bucketRepositorySupport: BucketRepositorySupport,
                      private val memberRepository: MemberRepository,
                      private val bucketViewRepository: BucketViewRepository,
-                     private val validation: Validation){
+                     private val jwtUtils: JwtUtils,){
 
     fun addBucket(memberEmail:String, addBucketRequest: AddBucketRequest): Long? {
         val member = memberRepository.findByEmail(memberEmail)!!
@@ -71,17 +72,19 @@ class BucketService (private val bucketRepository: BucketRepository,
         return BucketTop10Response(buckets)
     }
 
-    fun addBucketView(addBucketViewRequest: AddBucketViewRequest){
-        val bucket = bucketRepository.findByIdOrNull(addBucketViewRequest.bucketId)
+    fun addBucketView(bucketId: Long, request: HttpServletRequest){
+        val bucket = bucketRepository.findByIdOrNull(bucketId)
         bucket ?: throw CustomException(ErrorCode.NOT_FOUND_BUCKET)
 
-        val member = memberRepository.findByEmail(addBucketViewRequest.email)
-        member ?: throw CustomException(ErrorCode.NOT_EXIST_MEMBER)
+        val refreshToken = jwtUtils.resolveToken(request)
+        refreshToken ?: throw CustomException(ErrorCode.INVALID_TOKEN)
 
-        if(!checkBucketViewTimeConstraint(bucket.views, addBucketViewRequest.email))
+        val email = jwtUtils.getAuthentication(refreshToken).name
+
+        if(!checkBucketViewTimeConstraint(bucket.views, email))
             throw CustomException(ErrorCode.INVALID_BUCKET_VIEW_UPDATE_TIME)
 
-        val bucketView = BucketView(bucket, addBucketViewRequest.email)
+        val bucketView = BucketView(bucket, email)
         bucketViewRepository.save(bucketView)
     }
 

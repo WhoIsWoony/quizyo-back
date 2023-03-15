@@ -1,15 +1,12 @@
 package com.whoiswoony.springtutorial
 
+import com.whoiswoony.springtutorial.config.security.JwtUtils
 import com.whoiswoony.springtutorial.controller.exception.CustomException
 import com.whoiswoony.springtutorial.controller.exception.ErrorCode
 import com.whoiswoony.springtutorial.domain.bucket.*
-import com.whoiswoony.springtutorial.domain.member.Member
-import com.whoiswoony.springtutorial.domain.member.MemberRepository
-import com.whoiswoony.springtutorial.domain.member.ResetCode
+import com.whoiswoony.springtutorial.domain.member.*
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
-import com.whoiswoony.springtutorial.dto.bucket.AddBucketViewRequest
-import com.whoiswoony.springtutorial.service.Validation
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
 import io.kotest.assertions.throwables.shouldThrow
@@ -25,6 +22,8 @@ import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+
 
 @ExtendWith(MockKExtension::class)
 class BucketTest :StringSpec({
@@ -34,14 +33,15 @@ class BucketTest :StringSpec({
     val bucketRepositorySupport = mockk<BucketRepositorySupport>()
     val bucketShareMyRepository = mockk<BucketShareMyRepository>()
     val resetCode = ResetCode("")
-    val validation = mockk<Validation>()
+    val jwtUtils = mockk<JwtUtils>()
+    val request: HttpServletRequest = mockk<HttpServletRequest>()
 
     val bucketService = BucketService(
         memberRepository = memberRepository,
         bucketRepository = bucketRepository,
         bucketRepositorySupport = bucketRepositorySupport,
         bucketViewRepository = bucketViewRepository,
-        validation = validation
+        jwtUtils = jwtUtils,
     )
     val bucketShareMyService = BucketShareMyService(
         memberRepository = memberRepository,
@@ -51,14 +51,12 @@ class BucketTest :StringSpec({
 
     "없는 퀴즈셋 조회 불가능"{
         //given
-        val email = ""
         val bucketId : Long = 1
-        val addBucketViewRequest = AddBucketViewRequest(bucketId, email)
 
         every { bucketRepository.findByIdOrNull(bucketId) } returns null
 
         //when
-        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(addBucketViewRequest) }
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, request) }
 
         //then
         exception shouldBe CustomException(ErrorCode.NOT_FOUND_BUCKET)
@@ -78,6 +76,7 @@ class BucketTest :StringSpec({
         val bucketShares = mutableListOf<BucketShareMy>()
         val bucketQuizs = mutableListOf<Quiz>()
         val bucket = Bucket(bucketTitle, bucketDescription, member, bucketViews, bucketShares, bucketQuizs, bucketId)
+        val refreshToken = "refreshToken"
 
         val updatedBucketView = mutableListOf<BucketView>()
         val date = Date.valueOf(LocalDate.now())
@@ -85,13 +84,13 @@ class BucketTest :StringSpec({
         updatedBucketView.add(BucketView(bucket, email, date , time , bucketId))
 
         val updatedBucket = Bucket(bucketTitle, bucketDescription, member, updatedBucketView, bucketShares, bucketQuizs, bucketId)
-        val addBucketViewRequest = AddBucketViewRequest(bucketId, email)
 
         every { bucketRepository.findByIdOrNull(bucketId) } returns updatedBucket
-        every { memberRepository.findByEmail(email) } returns member
+        every { jwtUtils.resolveToken(request) } returns refreshToken
+        every { jwtUtils.getAuthentication(refreshToken).name } returns email
 
         //when
-        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(addBucketViewRequest) }
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, request) }
 
         //then
         exception shouldBe CustomException(ErrorCode.INVALID_BUCKET_VIEW_UPDATE_TIME)

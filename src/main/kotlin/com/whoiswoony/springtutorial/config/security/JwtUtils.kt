@@ -139,7 +139,6 @@ class JwtUtils(private val userDetailsService: UserDetailsService) {
 
         //순수 Token 추출
         val token = bearerToken.substring("BEARER ".length)
-        logger.error(token.trim())
         return token.trim()
     }
 
