@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -92,7 +93,8 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
 
     @Operation(summary = "이메일 중복체크 및 인증번호 발송", description = "(email) => String")
     @PostMapping("/authenticateRegisteringEmail")
-    fun authenticateRegisteringEmail(@RequestBody authenticateRegisteringEmailRequest: AuthenticateRegisteringEmailRequest): Boolean {
+    fun authenticateRegisteringEmail(@RequestBody authenticateRegisteringEmailRequest: AuthenticateRegisteringEmailRequest, request: HttpServletRequest): Boolean {
+        getIp(request)
         return if(authService.checkDuplicatedEmail(authenticateRegisteringEmailRequest.email))
             authService.authenticateRegisteringEmail(authenticateRegisteringEmailRequest)
         else false
@@ -114,5 +116,53 @@ class AuthController(private val authService: AuthService, private val jwtUtils:
     @PostMapping("/resetPassword")
     fun resetPassword(@RequestBody request: ResetPasswordRequest): Boolean {
         return authService.resetPassword(request)
+    }
+
+    fun getIp(request: HttpServletRequest) {
+        val headerNames: Enumeration<String>? = request.headerNames
+
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                val name = headerNames.nextElement() as String
+                val value = request.getHeader(name)
+                println("Header ::: $name : $value")
+            }
+        }
+
+        var ipAddress = request.getHeader("X-FORWARDED-FOR")
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("Proxy-Client-IP")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("WL-Proxy-Client-IP")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("HTTP_CLIENT_IP")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("HTTP_X_FORWARDED_FOR")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("X-Real-IP")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("X-RealIP")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.getHeader("REMOTE_ADDR")
+        }
+        println(ipAddress)
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equals(ipAddress, ignoreCase = true)) {
+            ipAddress = request.remoteAddr
+        }
+
+        println(ipAddress)
     }
 }
