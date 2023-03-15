@@ -88,7 +88,7 @@ class BucketTest :StringSpec({
         val addBucketViewRequest = AddBucketViewRequest(bucketId, email)
 
         every { bucketRepository.findByIdOrNull(bucketId) } returns updatedBucket
-        every { validation.ipAddressValidation(any()) } returns true
+        every { memberRepository.findByEmail(email) } returns member
 
         //when
         val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(addBucketViewRequest) }
