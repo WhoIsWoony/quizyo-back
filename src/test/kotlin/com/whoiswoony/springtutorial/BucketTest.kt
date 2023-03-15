@@ -8,6 +8,7 @@ import com.whoiswoony.springtutorial.domain.member.MemberRepository
 import com.whoiswoony.springtutorial.domain.member.ResetCode
 import com.whoiswoony.springtutorial.domain.quiz.Quiz
 import com.whoiswoony.springtutorial.dto.bucket.AddBucketShareMyRequest
+import com.whoiswoony.springtutorial.dto.bucket.AddBucketViewRequest
 import com.whoiswoony.springtutorial.service.Validation
 import com.whoiswoony.springtutorial.service.bucket.BucketService
 import com.whoiswoony.springtutorial.service.bucket.BucketShareMyService
@@ -50,49 +51,21 @@ class BucketTest :StringSpec({
 
     "없는 퀴즈셋 조회 불가능"{
         //given
-        val ipAddress = "0.0.0.0"
+        val email = ""
         val bucketId : Long = 1
+        val addBucketViewRequest = AddBucketViewRequest(bucketId, email)
 
         every { bucketRepository.findByIdOrNull(bucketId) } returns null
 
         //when
-        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, ipAddress) }
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(addBucketViewRequest) }
 
         //then
         exception shouldBe CustomException(ErrorCode.NOT_FOUND_BUCKET)
     }
 
-    "IP 주소 형식 오류"{
-        //given
-        val wrongIpAddress = "0.0.0."
-
-        val email = "test@test.com"
-        val password = "test123!"
-        val nickname = "test"
-        val member = Member(email, password, nickname, resetCode)
-
-        val bucketId : Long = 1
-        val bucketTitle = "test"
-        val bucketDescription = "INVALID_IPADDRESS_FORM"
-        val bucketViews = mutableListOf<BucketView>()
-        val bucketShares = mutableListOf<BucketShareMy>()
-        val bucketQuizs = mutableListOf<Quiz>()
-        val bucket = Bucket(bucketTitle, bucketDescription, member, bucketViews, bucketShares, bucketQuizs, bucketId)
-
-        every { bucketRepository.findByIdOrNull(bucketId) } returns bucket
-        every { validation.ipAddressValidation(any()) } returns false
-
-        //when
-        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, wrongIpAddress) }
-
-        //then
-        exception shouldBe CustomException(ErrorCode.INVALID_IPADDRESS_FORM)
-    }
-
     "24시간 이내 조회한 버킷 조회수 업데이트 불가"{
         //given
-        val ipAddress = "0.0.0.0"
-
         val email = "test@test.com"
         val password = "test123!"
         val nickname = "test"
@@ -109,15 +82,16 @@ class BucketTest :StringSpec({
         val updatedBucketView = mutableListOf<BucketView>()
         val date = Date.valueOf(LocalDate.now())
         val time = Time.valueOf(LocalTime.now())
-        updatedBucketView.add(BucketView(bucket, ipAddress, date , time , bucketId))
+        updatedBucketView.add(BucketView(bucket, email, date , time , bucketId))
 
         val updatedBucket = Bucket(bucketTitle, bucketDescription, member, updatedBucketView, bucketShares, bucketQuizs, bucketId)
+        val addBucketViewRequest = AddBucketViewRequest(bucketId, email)
 
         every { bucketRepository.findByIdOrNull(bucketId) } returns updatedBucket
         every { validation.ipAddressValidation(any()) } returns true
 
         //when
-        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(bucketId, ipAddress) }
+        val exception = shouldThrow<RuntimeException> { bucketService.addBucketView(addBucketViewRequest) }
 
         //then
         exception shouldBe CustomException(ErrorCode.INVALID_BUCKET_VIEW_UPDATE_TIME)

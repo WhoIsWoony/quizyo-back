@@ -8,14 +8,14 @@ import java.util.Date
 import javax.persistence.*
 
 @Entity(name="BUCKET_VIEW")
-@Table(uniqueConstraints = [UniqueConstraint(columnNames =  ["BUCKET_ID", "ipAddress", "createdDate"])])
+@Table(uniqueConstraints = [UniqueConstraint(columnNames =  ["BUCKET_ID", "email", "createdDate"])])
 class BucketView (
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "BUCKET_ID")
     val bucket:Bucket,
 
-    val ipAddress:String,
+    val email:String,
 
     @Temporal(TemporalType.DATE)
     var createdDate:Date = Date(),

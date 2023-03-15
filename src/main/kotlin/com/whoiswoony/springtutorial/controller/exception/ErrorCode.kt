@@ -26,7 +26,7 @@ enum class ErrorCode(val status: Int, val message: String) {
     INVALID_BUCKET_SHARE(3002, "자신이 생성한 버킷은 퍼올 수 없습니다."),
     DUPLICATE_BUCKET_SHARE_MY(3003, "이미 퍼온 버킷은 다시 퍼올 수 없습니다."),
     INVALID_IPADDRESS_FORM(3004, "잘못된 IP 주소 형식입니다."),
-    INVALID_BUCKET_VIEW_UPDATE_TIME(3005, "24시간 이내에 동일한 IP로 추가된 조회 수가 존재합니다."),
+    INVALID_BUCKET_VIEW_UPDATE_TIME(3005, "24시간 이내에 동일한 이메일로 추가된 조회 수가 존재합니다."),
 
     //Quiz error code
     NOT_FOUND_QUIZ(4001,"퀴즈를 찾을 수 없습니다."),
